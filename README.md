@@ -1,9 +1,16 @@
-# Bi9a Blocks V1
+# Bi9aCraft V4
 
-Persistent multiplayer voxel-world prototype for desktop + mobile.
+Critical mouse interaction rebuild:
+- Direct voxel-grid crosshair raycast (not InstancedMesh picking)
+- Hold Mouse1 to mine/break
+- Mouse2 to place selected building block (slots 4-9)
+- Mouse handling captured at document level while pointer-lock is active
+- Target HUD shows exact block coordinates for easy verification
+- Existing AZERTY/QWERTY controls, persistent Firebase edits, water and caves retained
 
-## Firebase
-Apply `firebase-rules.json` to Realtime Database for the `/voxel` path during testing. For public production use, add Firebase Authentication and stricter rules before launch.
 
-## Vercel
-Static deployment: upload/import this folder and deploy. No build command required.
+## V5 mouse fix
+- Mouse input is no longer disabled when a PC also has a touchscreen/coarse pointer.
+- Pointer lock is attached directly to the WebGL canvas.
+- The click used to acquire pointer lock is replayed as the requested mine/place action.
+- Mouse1 hold state is tracked globally so mining resumes reliably while held.
