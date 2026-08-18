@@ -1,0 +1,8 @@
+{
+  "rules": {
+    "honeyShop": {
+      ".read": true,
+      ".write": "auth != null"
+    }
+  }
+}

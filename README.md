@@ -1,16 +1,26 @@
-# Bi9aCraft V4
+# Kenitra Honey Shop
 
-Critical mouse interaction rebuild:
-- Direct voxel-grid crosshair raycast (not InstancedMesh picking)
-- Hold Mouse1 to mine/break
-- Mouse2 to place selected building block (slots 4-9)
-- Mouse handling captured at document level while pointer-lock is active
-- Target HUD shows exact block coordinates for easy verification
-- Existing AZERTY/QWERTY controls, persistent Firebase edits, water and caves retained
+## What it includes
+- Arabic RTL storefront
+- Products loaded live from Firebase Realtime Database
+- Articles/blog
+- WhatsApp order button with product name, price, weight
+- Admin page with Firebase Authentication
+- Product/article image uploads to Firebase Storage
+- Edit/delete products and articles
+- Editable shop name, WhatsApp number, hero text
+- Responsive mobile/desktop layout
 
+## Firebase setup (required once)
+1. Firebase Console > Authentication > Sign-in method > enable Email/Password.
+2. Authentication > Users > Add user. This email/password is your admin login.
+3. Realtime Database > Rules: paste `database.rules.json`.
+4. Storage > Rules: paste `storage.rules`.
+5. Open `/admin.html`, login, set your WhatsApp number in Settings.
+6. Optional: click "إضافة محتوى تجريبي" once.
 
-## V5 mouse fix
-- Mouse input is no longer disabled when a PC also has a touchscreen/coarse pointer.
-- Pointer lock is attached directly to the WebGL canvas.
-- The click used to acquire pointer lock is replayed as the requested mine/place action.
-- Mouse1 hold state is tracked globally so mining resumes reliably while held.
+## WhatsApp number
+Use international format without `+`, for example Morocco: `2126XXXXXXXX`.
+
+## Deploy
+Upload the folder to your GitHub repo connected to Vercel, or deploy as a static Vercel project.
