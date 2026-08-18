@@ -24,3 +24,12 @@ Use international format without `+`, for example Morocco: `2126XXXXXXXX`.
 
 ## Deploy
 Upload the folder to your GitHub repo connected to Vercel, or deploy as a static Vercel project.
+
+
+## Admin login
+Open `/admin.html`.
+
+- Username: `3bi9a`
+- Password: `3bi9a`
+
+This prototype uses a browser-side admin login. Apply the included Realtime Database and Storage rules for admin edits/uploads to work. For a public production store, replace this with Firebase Authentication because browser-side credentials can be discovered by a technical user.

@@ -1,14 +1,35 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
 import { getDatabase, ref, onValue, set, push, remove, get } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-database.js';
 import { getStorage, ref as sRef, uploadBytesResumable, getDownloadURL } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-storage.js';
 import { firebaseConfig, COLLECTION_ROOT } from './firebase-config.js';
-const app=initializeApp(firebaseConfig),auth=getAuth(app),db=getDatabase(app),storage=getStorage(app),root=COLLECTION_ROOT;
+const app=initializeApp(firebaseConfig),db=getDatabase(app),storage=getStorage(app),root=COLLECTION_ROOT;
 let products={},articles={},settings={};
 const $=id=>document.getElementById(id);const esc=s=>String(s||'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
-$('loginForm').addEventListener('submit',async e=>{e.preventDefault();try{await signInWithEmailAndPassword(auth,$('email').value.trim(),$('password').value)}catch(err){$('loginMsg').textContent='تعذر الدخول: '+friendly(err.code);$('loginMsg').classList.remove('hidden')}});$('logoutBtn').onclick=()=>signOut(auth);
-onAuthStateChanged(auth,user=>{$('loginView').classList.toggle('hidden',!!user);$('dashboard').classList.toggle('hidden',!user);if(user)bindData()});
-function friendly(c){return c?.includes('invalid-credential')?'راجع البريد وكلمة المرور.':c?.includes('too-many')?'محاولات كثيرة، جرب لاحقاً.':c||'خطأ غير معروف'}
+const ADMIN_USER='3bi9a', ADMIN_PASS='3bi9a';
+let dataBound=false;
+function showDashboard(){
+  $('loginView').classList.add('hidden');
+  $('dashboard').classList.remove('hidden');
+  if(!dataBound){dataBound=true;bindData();}
+}
+function showLogin(){
+  $('dashboard').classList.add('hidden');
+  $('loginView').classList.remove('hidden');
+}
+$('loginForm').addEventListener('submit',e=>{
+  e.preventDefault();
+  const user=$('username').value.trim(), pass=$('password').value;
+  if(user===ADMIN_USER && pass===ADMIN_PASS){
+    sessionStorage.setItem('honeyAdmin','1');
+    $('loginMsg').classList.add('hidden');
+    showDashboard();
+  }else{
+    $('loginMsg').textContent='اسم المستخدم أو كلمة المرور غير صحيحة.';
+    $('loginMsg').classList.remove('hidden');
+  }
+});
+$('logoutBtn').onclick=()=>{sessionStorage.removeItem('honeyAdmin');showLogin()};
+if(sessionStorage.getItem('honeyAdmin')==='1')showDashboard();else showLogin();
 document.querySelectorAll('.side-link[data-tab]').forEach(b=>b.onclick=()=>{document.querySelectorAll('.side-link[data-tab]').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.tab').forEach(x=>x.classList.add('hidden'));$('tab-'+b.dataset.tab).classList.remove('hidden')});
 function bindData(){onValue(ref(db,`${root}/products`),s=>{products=s.val()||{};$('statProducts').textContent=Object.keys(products).length;renderProducts()});onValue(ref(db,`${root}/articles`),s=>{articles=s.val()||{};$('statArticles').textContent=Object.keys(articles).length;renderArticles()});onValue(ref(db,`${root}/settings`),s=>{settings=s.val()||{};$('statPhone').textContent=settings.whatsapp||'-';$('sName').value=settings.shopName||'عسل القنيطرة';$('sWhatsapp').value=settings.whatsapp||'';$('sHero').value=settings.heroText||''})}
 async function upload(file,folder,progressEl){if(!file)return null;const safe=`${Date.now()}-${file.name.replace(/[^a-zA-Z0-9._-]/g,'_')}`;const task=uploadBytesResumable(sRef(storage,`${root}/${folder}/${safe}`),file);return new Promise((res,rej)=>task.on('state_changed',snap=>progressEl.style.width=Math.round(snap.bytesTransferred/snap.totalBytes*100)+'%',rej,async()=>res(await getDownloadURL(task.snapshot.ref))))}
