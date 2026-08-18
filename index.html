@@ -1,62 +1,39 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
-  <meta name="theme-color" content="#78b7e8" />
-  <title>Bi9a Blocks — Persistent Voxel World</title>
-  <link rel="stylesheet" href="./style.css" />
-  <script type="importmap">
-  {
-    "imports": {
-      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
-      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
-    }
-  }
-  </script>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<meta name="theme-color" content="#78bfff" />
+<title>Bi9aCraft — Persistent Voxel World</title>
+<link rel="stylesheet" href="./style.css" />
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"}}</script>
 </head>
 <body>
-  <div id="startScreen" class="screen">
-    <div class="card">
-      <div class="logo">BI9A <span>BLOCKS</span></div>
-      <p>A huge online voxel world. Build, destroy, explore — world edits are saved.</p>
-      <label>Player name</label>
-      <input id="nameInput" maxlength="18" placeholder="Your name" value="Player" />
-      <button id="playBtn">PLAY WORLD</button>
-      <div class="small">PC: WASD + mouse • Mobile: joystick + touch</div>
-    </div>
+<div id="startScreen" class="screen">
+  <div class="logoWrap"><div class="logo">BI9A<span>CRAFT</span></div><div class="subtitle">Persistent multiplayer voxel world</div></div>
+  <div class="card">
+    <label>PLAYER NAME</label>
+    <input id="nameInput" maxlength="18" placeholder="Player" />
+    <button id="playBtn">PLAY WORLD</button>
+    <div class="tips"><b>PC:</b> WASD • Space • Mouse • Hold left click to mine • Right click to place<br><b>Mobile:</b> joystick • swipe to look • hold MINE • PLACE</div>
   </div>
-
-  <div id="gameUI" class="hidden">
-    <div id="topbar">
-      <div><b>BI9A BLOCKS</b> <span id="onlineCount">• 1 online</span></div>
-      <div id="coords">X 0 Y 0 Z 0</div>
-      <div id="saveStatus">World: connecting…</div>
-    </div>
-
-    <div id="crosshair">+</div>
-    <div id="message"></div>
-
-    <div id="playersPanel">
-      <div class="panelTitle">PLAYERS</div>
-      <div id="playersList"></div>
-    </div>
-
-    <div id="chatPanel">
-      <div id="chatMessages"></div>
-      <form id="chatForm"><input id="chatInput" maxlength="80" placeholder="Press Enter to chat" autocomplete="off" /></form>
-    </div>
-
-    <div id="hotbar"></div>
-
-    <div id="mobileControls">
-      <div id="joystick"><div id="stick"></div></div>
-      <button id="jumpBtn" class="roundBtn">↑</button>
-      <button id="breakBtn" class="actionBtn">BREAK</button>
-      <button id="placeBtn" class="actionBtn">PLACE</button>
-    </div>
+</div>
+<div id="gameUI" class="hidden">
+  <div id="topbar"><div><b>BI9ACRAFT</b> <span id="onlineCount">• 1 online</span></div><div id="coords">X 0 Y 0 Z 0</div><div id="saveStatus">World: connecting…</div></div>
+  <div id="playersPanel"><div class="panelTitle">PLAYERS</div><div id="playersList"></div></div>
+  <div id="chatPanel"><div id="chatMessages"></div><form id="chatForm"><input id="chatInput" maxlength="80" placeholder="Press Enter to chat" autocomplete="off"></form></div>
+  <div id="crosshair"><i></i><b></b></div>
+  <div id="targetInfo"><span id="targetName"></span><div id="mineBar"><div id="mineFill"></div></div></div>
+  <div id="message"></div>
+  <div id="hotbar"></div>
+  <div id="handView"><div id="toolHead"></div><div id="toolHandle"></div></div>
+  <div id="mobileControls">
+    <div id="joystick"><div id="stick"></div></div>
+    <button id="jumpBtn" class="roundBtn">↑</button>
+    <button id="breakBtn" class="actionBtn mine">MINE</button>
+    <button id="placeBtn" class="actionBtn place">PLACE</button>
   </div>
-
-  <script type="module" src="./game.js"></script>
+</div>
+<script type="module" src="./game.js"></script>
 </body>
 </html>
