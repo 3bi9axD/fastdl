@@ -2,152 +2,61 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <meta name="theme-color" content="#6f42c1" />
-  <title>DrawGuess.io — Draw & Guess</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#78b7e8" />
+  <title>Bi9a Blocks — Persistent Voxel World</title>
   <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.180.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.180.0/examples/jsm/"
+    }
+  }
+  </script>
 </head>
 <body>
-  <div id="toast" class="toast"></div>
-  <div class="page-bg"></div>
-
-  <main id="home" class="home-screen">
-    <section class="home-card">
-      <div class="logo" aria-label="DrawGuess">
-        <span class="c1">d</span><span class="c2">r</span><span class="c3">a</span><span class="c4">w</span><span class="c5">g</span><span class="c6">u</span><span class="c7">e</span><span class="c8">s</span><span class="c1">s</span><b>.io</b>
-      </div>
-      <p class="tagline">Draw, guess, laugh. No account needed.</p>
-
-      <div class="avatar-stage">
-        <div id="avatarPreview" class="avatar big"><i class="hair"></i><i class="eye e1"></i><i class="eye e2"></i><i class="mouth"></i></div>
-        <button id="randomAvatar" class="round-icon" title="Random avatar">↻</button>
-        <button id="customizeAvatar" class="avatar-edit-btn">Customize face</button>
-      </div>
-
-      <div class="home-controls">
-        <input id="playerName" maxlength="18" placeholder="Enter your name" autocomplete="nickname" />
-        <select id="language"><option value="en">English</option><option value="ar">العربية</option><option value="fr">Français</option></select>
-        <button id="quickPlay" class="btn green jumbo">Play!</button>
-        <button id="createPrivate" class="btn blue">Create Private Room</button>
-      </div>
-
-      <div class="join-inline">
-        <input id="roomCode" maxlength="6" placeholder="Room code" />
-        <button id="joinRoom" class="btn purple">Join</button>
-      </div>
-      <small>Private rooms use a shareable link • up to 20 players</small>
-    </section>
-
-    <section class="about-card">
-      <h2>About</h2>
-      <p>DrawGuess.io is a free multiplayer drawing and guessing game. One player draws a secret word while everyone else races to guess it.</p>
-      <div class="how-grid">
-        <div><b>1</b><span>Choose a word</span></div><div><b>2</b><span>Draw it</span></div><div><b>3</b><span>Guess fast</span></div><div><b>4</b><span>Win points</span></div>
-      </div>
-    </section>
-  </main>
-
-  <div id="avatarMaker" class="modal-backdrop hidden">
-    <div class="avatar-maker-card">
-      <button id="closeAvatarMaker" class="modal-close">✕</button>
-      <h2>Create your face</h2>
-      <p>Use face parts or draw your own avatar.</p>
-      <div class="avatar-tabs"><button class="avatar-tab active" data-mode="parts">Face parts</button><button class="avatar-tab" data-mode="draw">Draw my face</button></div>
-      <div id="partsMaker" class="parts-maker">
-        <div id="makerPreview" class="avatar huge"><i class="hair"></i><i class="eye e1"></i><i class="eye e2"></i><i class="mouth"></i></div>
-        <div class="part-controls">
-          <label>Skin <input id="skinColor" type="color" value="#f1c27d"></label>
-          <label>Hair <input id="hairColor" type="color" value="#5b3927"></label>
-          <label>Eyes <select id="eyeStyle"><option value="dot">Dots</option><option value="happy">Happy</option><option value="wide">Wide</option></select></label>
-          <label>Mouth <select id="mouthStyle"><option value="smile">Smile</option><option value="flat">Flat</option><option value="open">Open</option></select></label>
-        </div>
-      </div>
-      <div id="drawMaker" class="draw-maker hidden">
-        <canvas id="faceCanvas" width="256" height="256"></canvas>
-        <div class="face-tools"><input id="faceColor" type="color" value="#111111"><input id="faceSize" type="range" min="2" max="30" value="10"><button id="faceErase">Eraser</button><button id="faceClear">Clear</button></div>
-      </div>
-      <button id="saveAvatar" class="btn green">Use this face</button>
+  <div id="startScreen" class="screen">
+    <div class="card">
+      <div class="logo">BI9A <span>BLOCKS</span></div>
+      <p>A huge online voxel world. Build, destroy, explore — world edits are saved.</p>
+      <label>Player name</label>
+      <input id="nameInput" maxlength="18" placeholder="Your name" value="Player" />
+      <button id="playBtn">PLAY WORLD</button>
+      <div class="small">PC: WASD + mouse • Mobile: joystick + touch</div>
     </div>
   </div>
 
-  <main id="room" class="room-screen hidden">
-    <header class="game-header">
-      <div class="header-left"><div class="mini-logo">drawguess.io</div><button id="copyInvite" class="icon-btn">🔗</button></div>
-      <div class="word-zone"><div id="roundText">Round 1 of 3</div><div id="wordDisplay">_ _ _ _ _</div></div>
-      <div class="timer-wrap"><div id="timer" class="timer">80</div><button id="leaveRoom" class="icon-btn danger-lite">✕</button></div>
-    </header>
+  <div id="gameUI" class="hidden">
+    <div id="topbar">
+      <div><b>BI9A BLOCKS</b> <span id="onlineCount">• 1 online</span></div>
+      <div id="coords">X 0 Y 0 Z 0</div>
+      <div id="saveStatus">World: connecting…</div>
+    </div>
 
-    <section class="game-grid">
-      <aside class="players-column">
-        <div id="playersList" class="players-list"></div>
-      </aside>
+    <div id="crosshair">+</div>
+    <div id="message"></div>
 
-      <section class="board-column">
-        <div id="lobbyOverlay" class="lobby-overlay hidden">
-          <div class="private-title">Private Room</div>
-          <div id="roomCodeBig" class="room-code">ABC123</div>
-          <p>Invite friends with the link, then start when everyone is ready.</p>
-          <div id="hostSettings" class="settings-grid">
-            <label>Players <select id="setPlayers"><option>4</option><option>6</option><option selected>8</option><option>10</option><option>12</option><option>16</option><option>20</option></select></label>
-            <label>Draw time <select id="setTime"><option>40</option><option>60</option><option selected>80</option><option>100</option><option>120</option><option>180</option></select></label>
-            <label>Rounds <select id="setRounds"><option>2</option><option selected>3</option><option>4</option><option>5</option><option>6</option><option>8</option><option>10</option></select></label>
-            <label>Hints <select id="setHints"><option>0</option><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option></select></label>
-          </div>
-          <textarea id="customWords" placeholder="Custom words separated by commas (optional)"></textarea>
-          <label class="check-row"><input id="customOnly" type="checkbox" /> Use custom words only</label>
-          <button id="startGame" class="btn green start-btn">Start Game!</button>
-        </div>
+    <div id="playersPanel">
+      <div class="panelTitle">PLAYERS</div>
+      <div id="playersList"></div>
+    </div>
 
-        <div id="resultOverlay" class="result-overlay hidden">
-          <div class="result-card">
-            <div class="result-label">ROUND RESULT</div>
-            <div id="resultAvatar" class="winner-avatar"></div>
-            <h2 id="resultName">Player</h2>
-            <div id="resultScore" class="result-score">+0 points</div>
-            <div id="resultWord" class="result-word">The word was: ...</div>
-            <div id="resultCountdown" class="result-countdown">Next round in 4</div>
-          </div>
-        </div>
+    <div id="chatPanel">
+      <div id="chatMessages"></div>
+      <form id="chatForm"><input id="chatInput" maxlength="80" placeholder="Press Enter to chat" autocomplete="off" /></form>
+    </div>
 
-        <div id="finalOverlay" class="result-overlay hidden">
-          <div class="result-card final-card">
-            <div class="result-label">GAME OVER</div>
-            <div id="podium" class="podium"></div>
-            <button id="backLobby" class="btn green hidden">Back to lobby</button>
-          </div>
-        </div>
+    <div id="hotbar"></div>
 
-        <div id="chooseOverlay" class="choose-overlay hidden">
-          <div>Choose a word</div>
-          <div id="wordChoices" class="word-choices"></div>
-        </div>
+    <div id="mobileControls">
+      <div id="joystick"><div id="stick"></div></div>
+      <button id="jumpBtn" class="roundBtn">↑</button>
+      <button id="breakBtn" class="actionBtn">BREAK</button>
+      <button id="placeBtn" class="actionBtn">PLACE</button>
+    </div>
+  </div>
 
-        <div class="canvas-shell">
-          <canvas id="board" width="960" height="640"></canvas>
-          <div id="spectatorNote" class="spectator-note hidden">Watch the drawing and type your guess →</div>
-        </div>
-
-        <div id="toolbar" class="toolbar disabled">
-          <div class="tool-stack">
-            <button class="tool active" data-tool="brush" title="Brush">✏️</button>
-            <button class="tool" data-tool="eraser" title="Eraser">⌫</button>
-            <button class="tool" data-tool="fill" title="Fill">▣</button>
-          </div>
-          <div class="sizes"><button data-size="4"></button><button data-size="9" class="active"></button><button data-size="18"></button><button data-size="30"></button></div>
-          <div id="palette" class="palette"></div>
-          <div class="toolbar-spacer"></div>
-          <button id="undoBtn" class="square-btn" title="Undo">↶</button>
-          <button id="clearBtn" class="square-btn" title="Clear">🗑</button>
-        </div>
-      </section>
-
-      <aside class="chat-column">
-        <div id="chatMessages" class="chat-messages"></div>
-        <form id="chatForm" class="chat-form"><input id="chatInput" maxlength="90" placeholder="Type your guess here..." autocomplete="off" /><button>➤</button></form>
-      </aside>
-    </section>
-  </main>
-
-  <script type="module" src="./app.js"></script>
+  <script type="module" src="./game.js"></script>
 </body>
 </html>
