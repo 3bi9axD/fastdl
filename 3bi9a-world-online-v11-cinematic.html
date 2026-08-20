@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
+<title>3bi9a World Online V9</title>
+<style>
+*{box-sizing:border-box}html,body,#game{margin:0;width:100%;height:100%;overflow:hidden;background:#101820;font-family:Inter,system-ui,Arial,sans-serif;color:#fff}canvas{display:block;touch-action:none}
+#hud{position:fixed;inset:16px 18px auto;display:flex;justify-content:space-between;pointer-events:none;z-index:4}.brand{font-weight:1000;letter-spacing:1.4px;font-size:20px;text-shadow:0 2px 12px #000}.brand span{font-size:10px;background:#ffd84d;color:#111;border-radius:999px;padding:4px 7px;vertical-align:3px}.stats{display:grid;grid-template-columns:auto auto;gap:8px;min-width:225px}.pill{background:#101820dd;border:1px solid #ffffff22;border-radius:14px;padding:9px 12px;backdrop-filter:blur(8px);font-size:13px}.xp{grid-column:1/3;height:7px;background:#ffffff20;border-radius:999px;overflow:hidden}.xp div{height:100%;background:linear-gradient(90deg,#62e87b,#ffd84d)}
+#mission{display:none}.k{display:none}#missionTitle{font-weight:850;font-size:12px}#missionText{font-size:10px;color:#d6e0ea;margin-top:2px;line-height:1.25}
+#health{grid-column:1/3;background:#101820dd;border:1px solid #ffffff22;border-radius:12px;padding:7px 10px;font-size:11px}.hpbar{height:6px;background:#ffffff20;border-radius:999px;overflow:hidden;margin-top:5px}.hpbar div{height:100%;background:linear-gradient(90deg,#ff5252,#65e66e)}
+#hint{position:fixed;left:50%;bottom:18px;transform:translateX(-50%);background:#101820dd;border:1px solid #ffffff20;padding:9px 14px;border-radius:999px;font-size:12px;color:#dbe7f3;pointer-events:none;z-index:5;white-space:nowrap}#resetBtn{position:fixed;right:18px;bottom:18px;border:1px solid #ffffff25;background:#101820cc;color:#fff;width:38px;height:38px;border-radius:12px;font-size:18px;cursor:pointer;z-index:5}
+#dialog{position:fixed;inset:0;background:#0008;display:grid;place-items:center;padding:18px;z-index:20}.hidden{display:none!important}.card{width:min(520px,100%);background:#111b27;border:1px solid #ffffff20;border-radius:22px;padding:20px;display:grid;grid-template-columns:54px 1fr;gap:14px;box-shadow:0 30px 90px #0008}.avatar{width:54px;height:54px;border-radius:15px;background:#ffd84d;color:#151515;display:grid;place-items:center;font-weight:1000;font-size:24px}.npc-name{font-weight:900;margin-bottom:6px}.card button{grid-column:1/3;border:0;border-radius:14px;padding:13px 16px;font-weight:900;cursor:pointer;background:#ffd84d;color:#181818}.card .ghost{background:#ffffff12;color:#fff}
+#toast{position:fixed;left:50%;top:20%;transform:translate(-50%,-10px);padding:12px 18px;background:#121c27e8;border:1px solid #ffffff22;border-radius:14px;opacity:0;pointer-events:none;transition:.25s;z-index:30;font-weight:800;box-shadow:0 16px 45px #0006}#toast.show{opacity:1;transform:translate(-50%,0)}
+#mobileControls{display:none}.mobileBtns button{border:1px solid #ffffff3b;background:#0b1119ba;color:#fff;font-weight:900;backdrop-filter:blur(8px)}
+#radarWrap{position:fixed;left:18px;bottom:65px;width:178px;height:178px;border-radius:50%;overflow:hidden;border:3px solid #ffffff66;box-shadow:0 10px 35px #0008;background:#0b1520cc;z-index:5;pointer-events:none}#radar{width:100%;height:100%;display:block}.radarLabel{position:absolute;left:50%;bottom:7px;transform:translateX(-50%);font-size:9px;font-weight:900;letter-spacing:1px;background:#0009;padding:3px 7px;border-radius:999px}
+#storeDialog{position:fixed;inset:0;background:#0007;display:grid;place-items:center;padding:18px;z-index:22}.storeCard{width:min(780px,100%);background:#101820f2;border:1px solid #ffffff24;border-radius:24px;padding:18px;box-shadow:0 30px 90px #0009;backdrop-filter:blur(12px)}.storeHead{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}.storeHead h2{margin:0}.storeHead small{color:#9fb0c2}.storeBody{display:grid;grid-template-columns:minmax(220px,300px) 1fr;gap:16px}.previewBox{height:340px;border-radius:18px;overflow:hidden;background:linear-gradient(#1f3141,#0d141d);border:1px solid #ffffff20;position:relative}.previewBox:after{content:'LIVE PREVIEW';position:absolute;left:12px;bottom:10px;font-size:10px;font-weight:900;letter-spacing:1px;background:#0008;padding:5px 8px;border-radius:999px}.outfits{display:grid;gap:9px;align-content:start}.outfit{border:1px solid #ffffff22;background:#ffffff0c;color:#fff;border-radius:15px;padding:12px 14px;text-align:left;cursor:pointer;display:grid;grid-template-columns:1fr auto;gap:4px 12px}.outfit b{font-size:14px}.outfit span{font-size:11px;color:#b9c6d4}.outfit:hover,.outfit.active{background:#ffffff17;border-color:#ffd84d80}.storeClose{margin-top:12px;width:100%;border:0;border-radius:14px;padding:12px;font-weight:900;background:#ffffff12;color:#fff;cursor:pointer}#garageDialog{position:fixed;inset:0;background:#0009;display:grid;place-items:center;padding:18px;z-index:23}.garageCard{width:min(430px,100%);background:#101820f5;border:1px solid #ffffff25;border-radius:22px;padding:20px;box-shadow:0 30px 90px #0009}.garageCard h2{margin:0 0 7px}.garageCard p{color:#c8d3df;font-size:13px}.garageCard button{width:100%;border:0;border-radius:13px;padding:13px;margin-top:8px;font-weight:900;cursor:pointer}.buyCar{background:#ffd84d;color:#171717}.garageClose{background:#ffffff12;color:#fff}@media(max-width:700px){.storeBody{grid-template-columns:1fr}.previewBox{height:210px}.storeCard{max-height:92vh;overflow:auto}}
+@media(max-width:800px){#hud{left:12px;right:12px;top:10px}.brand{font-size:16px}.stats{min-width:170px}.pill{padding:7px 9px;font-size:11px}#mission{left:12px;top:62px;width:auto;max-width:210px;padding:7px 9px}#hint{display:none}#resetBtn{top:136px;right:12px;bottom:auto;width:34px;height:34px}#mobileControls{display:block;position:fixed;inset:0;pointer-events:none;z-index:10}#radarWrap{left:auto;right:12px;bottom:auto;top:150px;width:120px;height:120px;border-width:2px}.radarLabel{font-size:7px;bottom:4px}#joyBase{position:absolute;left:24px;bottom:28px;width:116px;height:116px;border:1px solid #ffffff2a;background:#09111b66;border-radius:50%;pointer-events:auto;touch-action:none;backdrop-filter:blur(4px)}#joyStick{position:absolute;left:33px;top:33px;width:50px;height:50px;border-radius:50%;background:#ffffffcc;box-shadow:0 6px 20px #0005}.mobileBtns{position:absolute;right:20px;bottom:26px;display:grid;grid-template-columns:66px 66px;gap:10px;pointer-events:auto}.mobileBtns button{width:66px;height:66px;border-radius:50%;font-size:14px}.mobileBtns #mobileSprint{font-size:10px}.mobileBtns #mobileJump{background:#ffd84dcc;color:#171717}.mobileBtns #mobileInteract{font-size:20px}}
+
+#nameDialog{position:fixed;inset:0;background:linear-gradient(#07101dcc,#07101df2);display:grid;place-items:center;z-index:100;padding:18px}.nameCard{width:min(420px,100%);background:#101820f7;border:1px solid #ffffff25;border-radius:24px;padding:22px;box-shadow:0 30px 100px #000b}.nameCard h1{margin:0 0 6px;font-size:25px}.nameCard p{margin:0 0 16px;color:#aebdcb;font-size:13px}.nameCard input{width:100%;border:1px solid #ffffff25;background:#08111bdd;color:#fff;border-radius:14px;padding:14px 15px;font-size:16px;outline:none}.nameCard button{width:100%;margin-top:10px;border:0;border-radius:14px;padding:14px;background:#ffd84d;color:#111;font-weight:1000;cursor:pointer}.nameCard small{display:block;margin-top:10px;color:#7f91a4;text-align:center}.nameTag{position:absolute;transform:translate(-50%,-100%);pointer-events:none}
+#onlineStatus{grid-column:1/3;text-align:center;color:#8fe7a3}.offline{color:#ff9c9c!important}
+</style>
+</head>
+<body>
+<div id="nameDialog"><div class="nameCard"><h1>🌍 3BI9A WORLD</h1><p>Choose the name other online players will see.</p><input id="playerNameInput" maxlength="16" placeholder="Your player name" autocomplete="off"><button id="joinWorldBtn">JOIN ONLINE WORLD</button><small>Online multiplayer powered by Firebase</small></div></div><div id="game"></div>
+<div id="hud"><div class="brand">3BI9A WORLD <span>ONLINE V11</span></div><div class="stats"><div class="pill">🪙 <b id="coins">500</b></div><div class="pill">👥 ONLINE <b id="onlineCount">0</b></div><div class="pill">⭐ LVL <b id="level">1</b></div><div class="pill">🚗 <b id="vehicleLabel">ON FOOT</b></div><div class="xp"><div id="xpBar"></div></div><div id="onlineStatus" class="pill offline">● CONNECTING</div><div id="health">❤️ HEALTH <b id="hpText">100</b><div class="hpbar"><div id="hpBar"></div></div></div></div></div>
+<div id="mission"><div class="k">ACTIVE MISSION</div><div id="missionTitle"></div><div id="missionText"></div></div>
+<div id="hint">WASD move/drive • Mouse camera • SPACE jump / float • SHIFT sprint • E interact / enter / exit car</div><button id="resetBtn">↻</button>
+<div id="dialog" class="hidden"><div class="card"><div class="avatar">Y</div><div><div class="npc-name">Yassine • Delivery Manager</div><div id="dialogText"></div></div><button id="acceptBtn">Accept delivery</button><button id="closeBtn" class="ghost">Close</button></div></div>
+<div id="toast"></div>
+<div id="radarWrap"><canvas id="radar" width="260" height="260"></canvas><div class="radarLabel">CITY RADAR</div></div>
+<div id="storeDialog" class="hidden"><div class="storeCard"><div class="storeHead"><div><h2>👕 3BI9A STYLE</h2><small>Clothes • fitting room</small></div><b>🪙 <span id="shopCoins">500</span></b></div><div class="storeBody"><div id="previewBox" class="previewBox"></div><div><div class="outfits"><button class="outfit" data-name="Street Classic" data-shirt="24364b" data-pants="252832" data-price="0"><b>Street Classic</b><span>FREE</span><small>Blue shirt • dark pants</small></button><button class="outfit" data-name="Red Runner" data-shirt="cf3e4e" data-pants="161b22" data-price="120"><b>Red Runner</b><span>120 Coins</span><small>Red top • black pants</small></button><button class="outfit" data-name="Emerald City" data-shirt="2e9f68" data-pants="26344a" data-price="180"><b>Emerald City</b><span>180 Coins</span><small>Green top • navy pants</small></button><button class="outfit" data-name="Royal White" data-shirt="7a5bc7" data-pants="ececec" data-price="250"><b>Royal White</b><span>250 Coins</span><small>Purple top • white pants</small></button></div><button id="storeClose" class="storeClose">Leave clothes menu</button></div></div></div></div><div id="garageDialog" class="hidden"><div class="garageCard"><h2 id="garageName">🚘 Car showroom</h2><p id="garageText"></p><button id="garageBuy" class="buyCar">Buy car</button><button id="garageClose" class="garageClose">Cancel</button></div></div>
+<div id="mobileControls"><div id="joyBase"><div id="joyStick"></div></div><div class="mobileBtns"><button id="mobileInteract">E</button><button id="mobileJump">JUMP</button><button id="mobileSprint">RUN</button></div></div>
+<script type="importmap">{"imports":{"three":"https://unpkg.com/three@0.181.1/build/three.module.js"}}</script>
+<script type="module">
+import * as THREE from 'three';
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js';
+import { getAuth, signInAnonymously, setPersistence, browserLocalPersistence } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-auth.js';
+import { getDatabase, ref, set, update, onValue, onDisconnect, remove, serverTimestamp } from 'https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js';
+const firebaseConfig={apiKey:'AIzaSyA8YL70CSgDJ8CdPT1Q8doAiy-8jYoyxe0',authDomain:'bi9agame.firebaseapp.com',databaseURL:'https://bi9agame-default-rtdb.firebaseio.com',projectId:'bi9agame',storageBucket:'bi9agame.firebasestorage.app',messagingSenderId:'959072355800',appId:'1:959072355800:web:e551182bc78cf5b6d61ead',measurementId:'G-CW0C4XR66N'};
+const fbApp=initializeApp(firebaseConfig),fbAuth=getAuth(fbApp),fbDb=getDatabase(fbApp);
+let myUid=null,myName='',firebaseOnline=false,lastNetSend=0;
+const remotePlayers=new Map();
+
+const root=document.querySelector('#game'),scene=new THREE.Scene();
+scene.background=new THREE.Color(0x9fc7d8);
+scene.fog=new THREE.FogExp2(0x9fb8c4,.0038);
+const camera=new THREE.PerspectiveCamera(58,innerWidth/innerHeight,.1,600),
+renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});
+renderer.setSize(innerWidth,innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio,1.8));
+renderer.shadowMap.enabled=true;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+renderer.outputColorSpace=THREE.SRGBColorSpace;
+renderer.toneMapping=THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure=1.12;
+root.appendChild(renderer.domElement);
+
+const hemi=new THREE.HemisphereLight(0xdbeeff,0x58614d,1.35);scene.add(hemi);
+const sun=new THREE.DirectionalLight(0xfff0cf,3.2);
+sun.position.set(62,82,35);sun.castShadow=true;
+sun.shadow.mapSize.set(2048,2048);
+sun.shadow.camera.left=-210;sun.shadow.camera.right=210;sun.shadow.camera.top=210;sun.shadow.camera.bottom=-210;
+sun.shadow.camera.near=1;sun.shadow.camera.far=260;
+sun.shadow.bias=-.00025;sun.shadow.normalBias=.025;scene.add(sun);
+const fill=new THREE.DirectionalLight(0xa7c8e8,.38);fill.position.set(-55,30,-40);scene.add(fill);
+const mat=(c,r=.76,m=.02)=>new THREE.MeshStandardMaterial({color:c,roughness:r,metalness:m});
+function addBox(x,y,z,w,h,d,c,parent=scene,material=null){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),material||mat(c));m.position.set(x,y+h/2,z);m.castShadow=m.receiveShadow=true;parent.add(m);return m}
+function facadeTexture(base='#d9d4c5',trim='#725c48'){
+  const c=document.createElement('canvas');c.width=512;c.height=512;
+  const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,512,512);g.addColorStop(0,base);g.addColorStop(1,'#c9c4b9');
+  x.fillStyle=g;x.fillRect(0,0,512,512);
+  // subtle plaster / floor bands
+  x.globalAlpha=.12;
+  for(let y=0;y<512;y+=24){x.fillStyle=y%48===0?'#ffffff':'#000000';x.fillRect(0,y,512,3)}
+  x.globalAlpha=1;
+  // windows with frames, glass reflection and small balcony ledges
+  for(let y=55;y<410;y+=105){
+    for(let q=32;q<480;q+=112){
+      x.fillStyle=trim;x.fillRect(q-5,y-5,66,58);
+      const wg=x.createLinearGradient(q,y,q+56,y+48);
+      wg.addColorStop(0,'#76b6d7');wg.addColorStop(.48,'#bfe8f4');wg.addColorStop(.52,'#6d9fb8');wg.addColorStop(1,'#91c8df');
+      x.fillStyle=wg;x.fillRect(q,y,56,48);
+      x.fillStyle='rgba(255,255,255,.7)';x.fillRect(q+27,y,3,48);x.fillRect(q,y+22,56,3);
+      x.fillStyle='#5e5147';x.fillRect(q-10,y+57,76,7);
+      if((q+y)%2===0){x.fillStyle='#40464d';x.fillRect(q-6,y+64,68,5)}
+    }
+  }
+  // entrance
+  x.fillStyle='#49392f';x.fillRect(211,414,90,98);
+  x.fillStyle='#9ecfe3';x.fillRect(222,426,29,64);x.fillRect(260,426,29,64);
+  x.fillStyle='#d7be78';x.fillRect(250,458,5,5);
+  // stone base
+  x.fillStyle='rgba(70,66,62,.38)';x.fillRect(0,492,512,20);
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.colorSpace=THREE.SRGBColorSpace;
+  t.anisotropy=renderer.capabilities.getMaxAnisotropy?.()||1;
+  return new THREE.MeshStandardMaterial({map:t,roughness:.72,metalness:.02})
+}
+const facadeMats=[facadeTexture('#edc86e','#6d5441'),facadeTexture('#df927f','#6d4a43'),facadeTexture('#78bfc2','#465f68'),facadeTexture('#aaa5d5','#514b6b'),facadeTexture('#ded8ca','#6e6250')];
+const ground=new THREE.Mesh(new THREE.PlaneGeometry(360,360),mat(0x6aa85c));ground.rotation.x=-Math.PI/2;ground.receiveShadow=true;scene.add(ground);
+addBox(0,.01,0,18,.03,210,0x3f454c);addBox(0,.01,0,210,.03,18,0x3f454c);for(let z=-96;z<=96;z+=12)addBox(0,.03,z,.25,.02,5,0xf4e66c);for(let x=-96;x<=96;x+=12)addBox(x,.03,0,5,.02,.25,0xf4e66c);addBox(-12,.02,0,5,.12,210,0xb7bcc1);addBox(12,.02,0,5,.12,210,0xb7bcc1);addBox(0,.02,-12,210,.12,5,0xb7bcc1);addBox(0,.02,12,210,.12,5,0xb7bcc1);
+const buildingColors=[0xf0c566,0xe58f7a,0x74bfc2,0xa7a1d2,0xd9d4c5],buildingColliders=[];let seed=11;const rnd=()=>((seed=Math.sin(seed)*10000)-Math.floor(seed));function building(x,z,w,d,h,c,mi=0,collide=true){
+  const body=addBox(x,.1,z,w,h,d,c,scene,facadeMats[mi%facadeMats.length]);
+  // roof cap + parapet
+  addBox(x,h+.1,z,w*.86,.32,d*.86,0xe8e3dc);
+  addBox(x,h+.44,z,w*.27,.28,d*.27,0xa7adb2);
+  // entrance canopy on front
+  addBox(x,h*.02,z+d/2+.18,Math.min(4.8,w*.5),.22,.7,0x3d454d);
+  // balcony slabs and rails on taller buildings
+  if(h>8){
+    for(let by=3.2;by<h-1.6;by+=3.25){
+      addBox(x,by,z+d/2+.22,Math.min(w*.58,6.8),.16,.72,0xd9d6cf);
+      addBox(x,by+.16,z+d/2+.57,Math.min(w*.58,6.8),.48,.08,0x4b565d);
+    }
+  }
+  // small AC units on side for extra depth
+  if(w>8){
+    const acY=Math.min(h-1.4,4.4);
+    addBox(x+w/2+.16,acY,z-d*.18,.34,.52,1.15,0xe1e4e4);
+    addBox(x+w/2+.35,acY+.12,z-d*.18,.08,.28,.82,0x78858c);
+  }
+  if(collide)buildingColliders.push({x,z,hw:w/2+.48,hd:d/2+.48});
+  return body
+}for(const sx of[-1,1])for(const sz of[-1,1])for(let i=0;i<10;i++){const x=sx*(25+rnd()*67),z=sz*(25+rnd()*67),mi=Math.floor(rnd()*buildingColors.length);if(x>40&&z>32)continue;building(x,z,7+rnd()*10,7+rnd()*8,5+rnd()*13,buildingColors[mi],mi)}
+function tree(x,z){addBox(x,.1,z,.7,2.8,.7,0x7c5237);const c=new THREE.Mesh(new THREE.SphereGeometry(2.3,14,10),mat(0x3e8e4c));c.position.set(x,4.1,z);c.castShadow=true;scene.add(c)}for(let i=0;i<28;i++){const a=i*.75;tree(-60+Math.sin(a*1.8)*20,52+Math.cos(a)*18)}
+building(27,-28,13,10,7,0xffc928,0);addBox(27,5.8,-22.94,8,.8,.2,0x171717);
+// 3BI9A STYLE is now a real walk-in shop built directly inside the city.
+const storeX=-31,storeZ=-29;
+addBox(storeX,.02,storeZ,14,.12,11,0xd7d2c9);
+addBox(storeX,0,storeZ-5.35,14,7,.35,0xd66bb8);
+addBox(storeX-6.82,0,storeZ,.35,7,11,0xd66bb8);
+addBox(storeX+6.82,0,storeZ,.35,7,11,0xd66bb8);
+addBox(storeX-4.7,0,storeZ+5.35,4.6,7,.35,0xd66bb8);
+addBox(storeX+4.7,0,storeZ+5.35,4.6,7,.35,0xd66bb8);
+addBox(storeX,3.65,storeZ+5.35,4.8,3.7,.35,0xd66bb8);
+addBox(storeX,7.0,storeZ,14,.25,11,0xf0e8ef);
+addBox(storeX,4.65,storeZ+5.55,9,1,.25,0x171717);
+buildingColliders.push({x:storeX,z:storeZ-5.35,hw:7.25,hd:.42},{x:storeX-6.82,z:storeZ,hw:.42,hd:5.7},{x:storeX+6.82,z:storeZ,hw:.42,hd:5.7},{x:storeX-4.7,z:storeZ+5.35,hw:2.5,hd:.42},{x:storeX+4.7,z:storeZ+5.35,hw:2.5,hd:.42});
+const shopGlass=new THREE.MeshStandardMaterial({color:0x9ed8ec,metalness:.12,roughness:.08,transparent:true,opacity:.55});
+const leftWindow=new THREE.Mesh(new THREE.PlaneGeometry(3.1,2.8),shopGlass);leftWindow.position.set(storeX-4.3,2.35,storeZ+5.56);scene.add(leftWindow);
+const rightWindow=leftWindow.clone();rightWindow.position.x=storeX+4.3;scene.add(rightWindow);
+for(const x of[storeX-4.8,storeX-2.4,storeX+2.4,storeX+4.8]){addBox(x,.15,storeZ-4.65,1.65,2.35,.55,0x8c684d);addBox(x,2.5,storeZ-4.65,1.78,.12,.7,0xffe7bd)}
+addBox(storeX-4.7,.15,storeZ+1.3,3.8,1.0,1.25,0x4a3331);addBox(storeX+4.7,.15,storeZ+1.3,3.8,1.0,1.25,0x4a3331);addBox(storeX,.15,storeZ-3.65,4.2,1.05,1.1,0x353941);
+const mirror=new THREE.Mesh(new THREE.PlaneGeometry(3.4,3),new THREE.MeshStandardMaterial({color:0xbfe6f4,metalness:.45,roughness:.12}));mirror.position.set(storeX,2.55,storeZ-5.16);scene.add(mirror);
+const storeMarker=new THREE.Group();storeMarker.position.set(storeX,0,storeZ+7.0);scene.add(storeMarker);
+const interiorExit=new THREE.Group();interiorExit.position.set(storeX,0,storeZ+4.15);scene.add(interiorExit);
+const cashier=makeHuman(0xbd506d,0x222832,0xd19a6b);cashier.position.set(storeX,0,storeZ-2.9);cashier.rotation.y=0;scene.add(cashier);
+function marker(color){const g=new THREE.Group(),ring=new THREE.Mesh(new THREE.TorusGeometry(1.3,.12,8,28),new THREE.MeshStandardMaterial({color,emissive:color,emissiveIntensity:.5}));ring.rotation.x=Math.PI/2;ring.position.y=.18;g.add(ring);const beam=new THREE.Mesh(new THREE.CylinderGeometry(.25,.75,4,16,1,true),new THREE.MeshBasicMaterial({color,transparent:true,opacity:.14,side:THREE.DoubleSide}));beam.position.y=2;g.add(beam);scene.add(g);return g}const npcMarker=marker(0xffd84d);npcMarker.position.set(27,0,-18);const deliveryMarker=marker(0x5de0ff);deliveryMarker.position.set(-35,0,34);deliveryMarker.visible=false;
+const foodJobMarker=marker(0xff8c42);foodJobMarker.position.set(124,0,-125);const foodDropMarker=marker(0x86f7a1);foodDropMarker.position.set(-82,0,126);foodDropMarker.visible=false;
+const foodJobLabel=priceSprite('FOOD DELIVERY JOB');foodJobLabel.position.set(124,3.5,-125);scene.add(foodJobLabel);
+
+
+function makeHuman(shirt=0x2d4964,pants=0x20252d,skin=0xc98f65){
+ const g=new THREE.Group(),shirtMeshes=[],pantsMeshes=[];
+ const shirtMat=mat(shirt),pantsMat=mat(pants),skinMat=mat(skin);
+ const pelvis=new THREE.Mesh(new THREE.BoxGeometry(.72,.38,.42),pantsMat);pelvis.position.y=1.15;g.add(pelvis);pantsMeshes.push(pelvis);
+ const torso=new THREE.Mesh(new THREE.BoxGeometry(.92,1.05,.5),shirtMat);torso.position.y=1.82;torso.castShadow=true;g.add(torso);shirtMeshes.push(torso);
+ const neck=new THREE.Mesh(new THREE.CylinderGeometry(.13,.13,.18,8),skinMat);neck.position.y=2.42;g.add(neck);
+ const head=new THREE.Mesh(new THREE.SphereGeometry(.34,16,12),skinMat);head.scale.set(.9,1.08,.88);head.position.y=2.78;head.castShadow=true;g.add(head);
+ const hair=new THREE.Mesh(new THREE.SphereGeometry(.35,16,8,0,Math.PI*2,0,Math.PI/2),mat(0x22201f));hair.position.y=2.87;g.add(hair);
+ const limbs={};
+ function arm(side){const pivot=new THREE.Group();pivot.position.set(side*.59,2.16,0);const upper=new THREE.Mesh(new THREE.CapsuleGeometry(.12,.42,4,8),shirtMat);upper.rotation.z=side*.08;upper.position.y=-.31;pivot.add(upper);shirtMeshes.push(upper);const forePivot=new THREE.Group();forePivot.position.y=-.61;pivot.add(forePivot);const fore=new THREE.Mesh(new THREE.CapsuleGeometry(.105,.38,4,8),skinMat);fore.position.y=-.29;forePivot.add(fore);const hand=new THREE.Mesh(new THREE.SphereGeometry(.13,10,8),skinMat);hand.position.y=-.58;forePivot.add(hand);g.add(pivot);return {pivot,forePivot}}
+ function leg(side){const pivot=new THREE.Group();pivot.position.set(side*.25,1.2,0);const upper=new THREE.Mesh(new THREE.CapsuleGeometry(.15,.5,4,8),pantsMat);upper.position.y=-.37;pivot.add(upper);pantsMeshes.push(upper);const knee=new THREE.Group();knee.position.y=-.73;pivot.add(knee);const lower=new THREE.Mesh(new THREE.CapsuleGeometry(.13,.48,4,8),pantsMat);lower.position.y=-.35;knee.add(lower);pantsMeshes.push(lower);const foot=new THREE.Mesh(new THREE.BoxGeometry(.31,.18,.55),mat(0x17191c));foot.position.set(0,-.69,.12);knee.add(foot);g.add(pivot);return {pivot,knee}}
+ limbs.leftArm=arm(-1);limbs.rightArm=arm(1);limbs.leftLeg=leg(-1);limbs.rightLeg=leg(1);g.userData.limbs=limbs;g.userData.shirtMeshes=shirtMeshes;g.userData.pantsMeshes=pantsMeshes;return g;
+}
+function setOutfit(h,shirt,pants){for(const m of h.userData.shirtMeshes||[])m.material.color.setHex(shirt);for(const m of h.userData.pantsMeshes||[])m.material.color.setHex(pants)}
+const player=makeHuman(0x24364b,0x252832);const cap=new THREE.Mesh(new THREE.CylinderGeometry(.36,.36,.16,16),mat(0xffd84d));cap.position.y=3.05;player.add(cap);scene.add(player);
+const yassine=makeHuman(0x8c5a2e,0x26344a,0xd19a6b);yassine.position.set(27,0,-18);yassine.rotation.y=Math.PI;scene.add(yassine);
+
+function makeCar(color=0xd94242){
+ const g=new THREE.Group(),
+ paint=new THREE.MeshPhysicalMaterial({color,roughness:.24,metalness:.34,clearcoat:.72,clearcoatRoughness:.15}),
+ dark=new THREE.MeshStandardMaterial({color:0x101216,roughness:.4,metalness:.2}),
+ glass=new THREE.MeshPhysicalMaterial({color:0x6fa8bd,metalness:.08,roughness:.04,transparent:true,opacity:.72,transmission:.08,clearcoat:.7});
+
+ const lower=new THREE.Mesh(new THREE.BoxGeometry(1.92,.48,3.95),paint);lower.position.y=.66;lower.castShadow=true;g.add(lower);
+ const body=new THREE.Mesh(new THREE.BoxGeometry(1.82,.46,3.45),paint);body.position.y=.94;g.add(body);
+ const hood=new THREE.Mesh(new THREE.BoxGeometry(1.74,.22,1.18),paint);hood.position.set(0,1.23,1.32);hood.rotation.x=-.05;g.add(hood);
+ const roof=new THREE.Mesh(new THREE.BoxGeometry(1.5,.16,1.48),paint);roof.position.set(0,1.78,-.22);g.add(roof);
+ const windshield=new THREE.Mesh(new THREE.BoxGeometry(1.46,.62,.08),glass);windshield.position.set(0,1.52,.57);windshield.rotation.x=-.34;g.add(windshield);
+ const rearGlass=windshield.clone();rearGlass.position.z=-1.01;rearGlass.rotation.x=.34;g.add(rearGlass);
+ for(const x of[-.77,.77]){const side=new THREE.Mesh(new THREE.BoxGeometry(.05,.55,1.18),glass);side.position.set(x,1.5,-.25);g.add(side)}
+ const bumper1=new THREE.Mesh(new THREE.BoxGeometry(1.82,.18,.18),dark);bumper1.position.set(0,.55,2.02);g.add(bumper1);const bumper2=bumper1.clone();bumper2.position.z=-2.02;g.add(bumper2);
+ const wheels=[];for(const x of[-.92,.92])for(const z of[-1.25,1.25]){const wh=new THREE.Mesh(new THREE.CylinderGeometry(.4,.4,.26,20),mat(0x111215,.3));wh.rotation.z=Math.PI/2;wh.position.set(x,.48,z);g.add(wh);const rim=new THREE.Mesh(new THREE.CylinderGeometry(.2,.2,.27,16),new THREE.MeshStandardMaterial({color:0x9ba2aa,roughness:.24,metalness:.78}));rim.rotation.z=Math.PI/2;rim.position.copy(wh.position);g.add(rim);wheels.push(wh,rim)}
+ for(const x of[-.57,.57]){const l=new THREE.Mesh(new THREE.BoxGeometry(.34,.18,.08),new THREE.MeshStandardMaterial({color:0xfff0b0,emissive:0xffe7a0,emissiveIntensity:.75}));l.position.set(x,.89,1.99);g.add(l);const ta=new THREE.Mesh(new THREE.BoxGeometry(.34,.18,.08),new THREE.MeshStandardMaterial({color:0xe52c35,emissive:0x9b1018,emissiveIntensity:.55}));ta.position.set(x,.88,-1.99);g.add(ta)}
+ const plate=addBox(0,.55,2.11,.66,.18,.04,0xf5f4e8,g);plate.position.x=0;g.userData.wheels=wheels;return g}
+
+function streetLamp(x,z,rot=0){
+  const g=new THREE.Group();g.position.set(x,0,z);g.rotation.y=rot;
+  const pole=new THREE.Mesh(new THREE.CylinderGeometry(.08,.11,4.7,10),new THREE.MeshStandardMaterial({color:0x34383c,roughness:.45,metalness:.68}));
+  pole.position.y=2.35;pole.castShadow=true;g.add(pole);
+  const arm=new THREE.Mesh(new THREE.BoxGeometry(.08,.08,1.05),mat(0x34383c,.45,.68));arm.position.set(0,4.48,.43);g.add(arm);
+  const lamp=new THREE.Mesh(new THREE.BoxGeometry(.5,.14,.28),new THREE.MeshStandardMaterial({color:0xd8d4bd,emissive:0xffe2a0,emissiveIntensity:.75,roughness:.35}));
+  lamp.position.set(0,4.38,.94);g.add(lamp);scene.add(g)
+}
+for(let p=-70;p<=70;p+=22){streetLamp(p,-9,0);streetLamp(p,9,Math.PI);streetLamp(-9,p,Math.PI/2);streetLamp(9,p,-Math.PI/2)}
+
+
+// distant skyline for depth
+for(let i=0;i<34;i++){
+  const a=(i/34)*Math.PI*2,r=138+Math.random()*30;
+  const x=Math.cos(a)*r,z=Math.sin(a)*r;
+  const w=8+Math.random()*12,d=8+Math.random()*12,h=18+Math.random()*38;
+  const col=[0x8e969e,0x7f8992,0x9b9387,0x77858c][i%4];
+  const b=addBox(x,.02,z,w,h,d,col,scene,mat(col,.82,.03));b.castShadow=false;
+}
+
+const traffic=[];function addTraffic(route,color,offset=0,speed=7){const car=makeCar(color);scene.add(car);traffic.push({car,route,t:offset,speed,hitCool:0});return car}
+addTraffic([{x:-78,z:-4},{x:78,z:-4}],0xdd4242,.1,8);addTraffic([{x:78,z:4},{x:-78,z:4}],0x3687d9,.55,7);addTraffic([{x:4,z:-78},{x:4,z:78}],0xe0b93a,.25,6.5);addTraffic([{x:-4,z:78},{x:-4,z:-78}],0x444444,.72,7.5);
+let playerCar=makeCar(0x164f9c);playerCar.position.set(5,0,25);playerCar.rotation.y=Math.PI;playerCar.userData.vehicleName='City Compact';scene.add(playerCar);let driving=false,carSpeed=0;
+const drivableCars=[playerCar];
+function addDrivableCar(color,x,z,rot=0,label='City Car'){const c=makeCar(color);c.position.set(x,0,z);c.rotation.y=rot;c.userData.vehicleName=label;scene.add(c);drivableCars.push(c);return c}
+addDrivableCar(0xbf3b3b,-28,24,Math.PI,'Red Compact');addDrivableCar(0x2e8b57,36,-26,0,'Green Sedan');addDrivableCar(0xe0b239,-68,52,Math.PI/2,'Golden Coupe');addDrivableCar(0x6f5aa8,92,78,-Math.PI/2,'Purple Sport');addDrivableCar(0xf0f0f0,-92,-76,0,'White Cruiser');
+
+// Large walk-in car showroom
+const garageX=58,garageZ=50;addBox(garageX,.02,garageZ,30,.12,22,0xc7cbd0);addBox(garageX,0,garageZ-10.7,30,8,.45,0x2a3038);addBox(garageX-14.8,0,garageZ,0.45,8,22,0x2a3038);addBox(garageX+14.8,0,garageZ,0.45,8,22,0x2a3038);addBox(garageX-10.5,0,garageZ+10.7,8.5,8,.45,0x2a3038);addBox(garageX+10.5,0,garageZ+10.7,8.5,8,.45,0x2a3038);addBox(garageX,6.6,garageZ+10.7,12.5,1.4,.45,0x2a3038);addBox(garageX,8,garageZ,30,.3,22,0x444b55);buildingColliders.push({x:garageX,z:garageZ-10.7,hw:15.2,hd:.5},{x:garageX-14.8,z:garageZ,hw:.5,hd:11.2},{x:garageX+14.8,z:garageZ,hw:.5,hd:11.2},{x:garageX-10.5,z:garageZ+10.7,hw:4.6,hd:.5},{x:garageX+10.5,z:garageZ+10.7,hw:4.6,hd:.5});
+const garageSign=addBox(garageX,6.35,garageZ+10.95,11,1,.2,0xffd84d);
+function priceSprite(text){const c=document.createElement('canvas');c.width=512;c.height=128;const q=c.getContext('2d');q.fillStyle='#101820e8';q.fillRect(0,0,512,128);q.strokeStyle='#ffd84d';q.lineWidth=7;q.strokeRect(5,5,502,118);q.fillStyle='#fff';q.font='bold 40px Arial';q.textAlign='center';q.fillText(text,256,78);const tx=new THREE.CanvasTexture(c);tx.colorSpace=THREE.SRGBColorSpace;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true}));sp.scale.set(5.8,1.45,1);return sp}
+const showroomCars=[];function showroom(name,price,color,x,z){const car=makeCar(color);car.position.set(x,0,z);car.rotation.y=Math.PI/2;scene.add(car);const label=priceSprite(name+' • '+price+' Coins');label.position.set(x,3.4,z);scene.add(label);const data={name,price,color,car,label};showroomCars.push(data);return data}showroom('Atlas GT',2200,0xc53c35,garageX-8,garageZ);showroom('Sahara SUV',4000,0x2d6a52,garageX,garageZ);showroom('Casablanca RS',6500,0xe8b92e,garageX+8,garageZ);
+function openGarageCar(g){selectedGarageCar=g;garageDialog.classList.remove('hidden');document.querySelector('#garageName').textContent='🚘 '+g.name;const owned=(state.ownedCars||[]).includes(g.name);document.querySelector('#garageText').textContent=owned?'You already own this car. Make it your active vehicle?':'Price: '+g.price+' Coins. Buy it and it becomes your active vehicle.';document.querySelector('#garageBuy').textContent=owned?'Use this car':'Buy for '+g.price+' Coins'}
+document.querySelector('#garageClose').onclick=()=>garageDialog.classList.add('hidden');document.querySelector('#garageBuy').onclick=()=>{if(!selectedGarageCar)return;state.ownedCars=state.ownedCars||['City Compact'];const owned=state.ownedCars.includes(selectedGarageCar.name);if(!owned){if(state.coins<selectedGarageCar.price){toast('Not enough Coins');return}state.coins-=selectedGarageCar.price;state.ownedCars.push(selectedGarageCar.name)}state.activeCar=selectedGarageCar.name;const col=selectedGarageCar.color;for(const m of playerCar.children){if(m.material&&m.material.color&&m.material.color.getHex()!==0x15181d&&m.material.color.getHex()!==0x83bdd2&&m.material.color.getHex()!==0xb9c0c8)m.material.color.setHex(col)}playerCar.position.set(garageX,0,garageZ+15);playerCar.rotation.y=Math.PI;garageDialog.classList.add('hidden');syncUI();save();toast(owned?'Car selected!':'Car purchased!')};
+// Live 3D clothes preview
+const previewScene=new THREE.Scene();previewScene.background=new THREE.Color(0x182533);previewScene.add(new THREE.HemisphereLight(0xffffff,0x304030,2.5));const previewCam=new THREE.PerspectiveCamera(38,1,.1,30);previewCam.position.set(0,2.3,6.2);previewCam.lookAt(0,1.55,0);const previewPlayer=makeHuman(0x24364b,0x252832);previewScene.add(previewPlayer);const previewRenderer=new THREE.WebGLRenderer({antialias:true,alpha:true});previewRenderer.setPixelRatio(Math.min(devicePixelRatio,2));document.querySelector('#previewBox').appendChild(previewRenderer.domElement);function resizePreview(){const el=document.querySelector('#previewBox');previewRenderer.setSize(el.clientWidth,el.clientHeight,false);previewCam.aspect=el.clientWidth/el.clientHeight;previewCam.updateProjectionMatrix()}function previewSet(shirt,pants){setOutfit(previewPlayer,shirt,pants)}setTimeout(resizePreview,0);
+const walkers=[];function addWalker(points,shirt,offset,speed=.9){const h=makeHuman(shirt,0x30343b,0xc7966d);scene.add(h);walkers.push({h,points,t:offset,speed,walk:0});return h}addWalker([{x:16,z:-40},{x:16,z:40}],0x4677a5,.1,1.1);addWalker([{x:-16,z:48},{x:-16,z:-50}],0x6a8f4d,.55,.85);addWalker([{x:-50,z:16},{x:50,z:16}],0x944e63,.25,1);addWalker([{x:55,z:-16},{x:-55,z:-16}],0x6e58a7,.72,1.05);
+
+// ===== V8 CLEAN CITY LAYOUT =====
+function signSprite(text,bg='#18202a',fg='#ffffff',border='#ffd84d',scaleX=7){const c=document.createElement('canvas');c.width=512;c.height=128;const q=c.getContext('2d');q.fillStyle=bg;q.fillRect(0,0,512,128);q.strokeStyle=border;q.lineWidth=8;q.strokeRect(6,6,500,116);q.fillStyle=fg;q.font='bold 38px Arial';q.textAlign='center';q.textBaseline='middle';q.fillText(text,256,66);const tx=new THREE.CanvasTexture(c);tx.colorSpace=THREE.SRGBColorSpace;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true}));sp.scale.set(scaleX,1.75,1);scene.add(sp);return sp}
+
+function makeAsphaltMaterial(){
+  const c=document.createElement('canvas');c.width=512;c.height=512;const q=c.getContext('2d');
+  q.fillStyle='#303236';q.fillRect(0,0,512,512);
+  for(let i=0;i<18000;i++){
+    const v=35+Math.random()*30;q.fillStyle=`rgba(${v},${v},${v},${Math.random()*.16})`;
+    q.fillRect(Math.random()*512,Math.random()*512,1+Math.random()*2,1+Math.random()*2);
+  }
+  for(let i=0;i<65;i++){q.strokeStyle='rgba(15,15,15,.12)';q.lineWidth=.5+Math.random()*1.5;q.beginPath();q.moveTo(Math.random()*512,Math.random()*512);q.lineTo(Math.random()*512,Math.random()*512);q.stroke()}
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(5,5);t.colorSpace=THREE.SRGBColorSpace;
+  t.anisotropy=Math.min(8,renderer.capabilities.getMaxAnisotropy?.()||1);
+  return new THREE.MeshStandardMaterial({map:t,roughness:.93,metalness:0});
+}
+function makeConcreteMaterial(){
+  const c=document.createElement('canvas');c.width=256;c.height=256;const q=c.getContext('2d');
+  q.fillStyle='#b9b4aa';q.fillRect(0,0,256,256);
+  for(let i=0;i<6000;i++){const v=130+Math.random()*80;q.fillStyle=`rgba(${v},${v},${v},.08)`;q.fillRect(Math.random()*256,Math.random()*256,1,1)}
+  q.strokeStyle='rgba(70,70,70,.18)';q.lineWidth=2;for(let x=0;x<=256;x+=64){q.beginPath();q.moveTo(x,0);q.lineTo(x,256);q.stroke()}for(let y=0;y<=256;y+=64){q.beginPath();q.moveTo(0,y);q.lineTo(256,y);q.stroke()}
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,3);t.colorSpace=THREE.SRGBColorSpace;
+  return new THREE.MeshStandardMaterial({map:t,roughness:.96});
+}
+const asphaltMat=makeAsphaltMaterial(),concreteMat=makeConcreteMaterial();
+
+// subtle city ground texture overlay
+const cityGroundMat=makeConcreteMaterial();
+const cityGround=new THREE.Mesh(new THREE.PlaneGeometry(330,330),cityGroundMat);
+cityGround.rotation.x=-Math.PI/2;cityGround.position.y=.006;cityGround.receiveShadow=true;scene.add(cityGround);
+
+function roadStrip(x,z,w,d){
+  const road=addBox(x,.012,z,w,.045,d,0x303236,scene,asphaltMat);
+  if(w>d){
+    addBox(x,.055,z-d/2+.55,w,.025,.12,0xe9e9e3);
+    addBox(x,.055,z+d/2-.55,w,.025,.12,0xe9e9e3);
+    for(let px=x-w/2+9;px<x+w/2-7;px+=14)addBox(px,.065,z,5.5,.02,.18,0xe9d45a);
+  }else{
+    addBox(x-w/2+.55,.055,z,.12,.025,d,0xe9e9e3);
+    addBox(x+w/2-.55,.055,z,.12,.025,d,0xe9e9e3);
+    for(let pz=z-d/2+9;pz<z+d/2-7;pz+=14)addBox(x,.065,pz,.18,.02,5.5,0xe9d45a);
+  }
+}
+function sidewalkStrip(x,z,w,d){addBox(x,.022,z,w,.13,d,0xc4c8cb);}
+function curbLine(x,z,w,d){addBox(x,.13,z,w,.18,d,0x8e9499)}
+// Clean outer boulevards: road, curb and sidewalk never overlap.
+roadStrip(0,100,330,14); roadStrip(0,-100,330,14); roadStrip(100,0,14,330); roadStrip(-100,0,14,330);
+sidewalkStrip(0,89.5,330,6); sidewalkStrip(0,110.5,330,6); sidewalkStrip(0,-89.5,330,6); sidewalkStrip(0,-110.5,330,6);
+sidewalkStrip(89.5,0,6,330); sidewalkStrip(110.5,0,6,330); sidewalkStrip(-89.5,0,6,330); sidewalkStrip(-110.5,0,6,330);
+for(const z of[92.5,107.5,-92.5,-107.5])curbLine(0,z,330,.22);for(const x of[92.5,107.5,-92.5,-107.5])curbLine(x,0,.22,330);
+// Residential blocks deliberately placed away from roads and attractions.
+const extraBuildings=[[-140,66,15,16,13,1],[-140,28,18,15,18,4],[-140,-22,14,17,12,2],[-140,-64,19,15,16,3],[-62,139,16,15,14,0],[-26,139,14,18,11,4],[6,139,14,16,17,3],[142,70,18,16,14,2],[142,34,14,17,18,0],[142,-28,17,14,11,4],[142,-68,16,17,16,3],[-66,-140,16,16,12,1],[-28,-140,17,14,15,4],[28,-140,14,18,10,2],[68,-140,18,15,17,0]];for(const [x,z,w,d,h,mi] of extraBuildings)building(x,z,w,d,h,buildingColors[mi],mi);
+// Landmark tower with its own plaza, well clear of the road.
+const towerX=66,towerZ=-66;addBox(towerX,.04,towerZ,26,.18,26,0x777f86);addBox(towerX,.05,towerZ,18,.25,18,0x3a4148);const towerMat=new THREE.MeshStandardMaterial({color:0x6bb4ce,metalness:.45,roughness:.18});addBox(towerX,.3,towerZ,14,52,14,0x6bb4ce,scene,towerMat);for(let y=7;y<52;y+=6){addBox(towerX,y,towerZ+7.03,12.8,.18,.08,0xd8f4ff);addBox(towerX,y,towerZ-7.03,12.8,.18,.08,0xd8f4ff)}addBox(towerX,52.4,towerZ,9,3,9,0x323a45);const towerSign=signSprite('3BI9A TOWER','#10202b','#ffffff','#65d6ff',8);towerSign.position.set(towerX,42,towerZ+7.6);
+// City park: bordered green plot with clean paths.
+const parkX=-58,parkZ=132;addBox(parkX,.025,parkZ,66,.09,48,0x4f9d58);sidewalkStrip(parkX,parkZ-25.5,70,3.5);for(let x=parkX-27;x<=parkX+27;x+=13.5)addBox(x,.1,parkZ,1.8,.03,42,0xd8c9aa);for(let z=parkZ-17;z<=parkZ+17;z+=11)addBox(parkX,.11,z,58,.03,1.8,0xd8c9aa);for(let i=0;i<18;i++){const a=i*1.91;tree(parkX+Math.sin(a)*26,parkZ+Math.cos(a*1.3)*18)}
+function bench(x,z,r=0){const g=new THREE.Group();addBox(0,.45,0,2.2,.18,.55,0x865d3e,g);addBox(0,1.05,.2,2.2,.18,.22,0x865d3e,g);addBox(-.8,.1,0,.15,.55,.15,0x31363b,g);addBox(.8,.1,0,.15,.55,.15,0x31363b,g);g.position.set(x,0,z);g.rotation.y=r;scene.add(g)}for(const [x,z,r] of [[-72,132,0],[-44,132,Math.PI],[-58,119,Math.PI/2],[-58,145,-Math.PI/2]])bench(x,z,r);const parkSign=signSprite('CITY PARK','#153921','#ffffff','#79e58f',7);parkSign.position.set(parkX,4.8,parkZ-24);
+// Bus terminal: dedicated lot north of boulevard, with access lane, platforms and aligned buses.
+const busX=58,busZ=137;roadStrip(busX,116,74,10);sidewalkStrip(busX,122.2,74,3.2);addBox(busX,.03,busZ,64,.08,26,0x626a72);curbLine(busX,busZ-13.1,64,.3);curbLine(busX-32.1,busZ,.3,26);curbLine(busX+32.1,busZ,.3,26);
+// terminal building at rear
+addBox(busX,.05,busZ+10.2,34,5.5,5.2,0x303842);addBox(busX,5.55,busZ+10.2,35,.28,5.4,0x505a64);buildingColliders.push({x:busX,z:busZ+10.2,hw:17.4,hd:2.9});
+const termGlass=new THREE.Mesh(new THREE.PlaneGeometry(24,2.5),new THREE.MeshStandardMaterial({color:0x9bd4e8,transparent:true,opacity:.62,roughness:.08}));termGlass.position.set(busX,2.3,busZ+7.58);termGlass.rotation.y=Math.PI;scene.add(termGlass);
+// platform islands and shelters
+for(const x of[40,58,76]){addBox(x,.05,busZ-1.0,7,.16,18,0xc6c9cc);addBox(x,2.85,busZ-1.0,7,.22,10,0x59636d);for(const zz of[busZ-5,busZ+3]){addBox(x-3.1,.1,zz,.18,2.7,.18,0x404850);addBox(x+3.1,.1,zz,.18,2.7,.18,0x404850)}}
+function makeBus(color=0xe8b52f){const g=new THREE.Group(),bodyMat=mat(color,.38),glassMat=new THREE.MeshStandardMaterial({color:0x8ed2e8,roughness:.08,metalness:.15,transparent:true,opacity:.78});const b=new THREE.Mesh(new THREE.BoxGeometry(2.9,2.55,8.8),bodyMat);b.position.y=1.65;b.castShadow=true;g.add(b);const front=new THREE.Mesh(new THREE.BoxGeometry(2.55,1.1,.08),glassMat);front.position.set(0,2.15,4.42);g.add(front);for(const side of[-1,1])for(let z=-2.8;z<=2.8;z+=1.4){const w=new THREE.Mesh(new THREE.BoxGeometry(.05,.9,1.05),glassMat);w.position.set(side*1.46,2.05,z);g.add(w)}for(const x of[-1.28,1.28])for(const z of[-2.9,2.9]){const wh=new THREE.Mesh(new THREE.CylinderGeometry(.56,.56,.36,18),mat(0x121315,.3));wh.rotation.z=Math.PI/2;wh.position.set(x,.62,z);g.add(wh)}return g}
+for(const [x,c] of [[40,0xdf3d38],[58,0x2f83cf],[76,0xe3b833]]){const b=makeBus(c);b.position.set(x,0,busZ-2);scene.add(b)}const busSign=signSprite('CITY BUS TERMINAL','#17212b','#ffffff','#ffd84d',9);busSign.position.set(busX,7.1,busZ+7.2);
+// Food street: one clean commercial row, storefronts face a dedicated street and pavement.
+const foodZ=-140;roadStrip(126,-116,92,11);sidewalkStrip(126,-123.2,92,4);curbLine(126,-120.6,92,.24);
+function foodShop(x,z,name,color){addBox(x,.05,z,18,6.3,12,color);addBox(x,6.35,z,18,.35,12,0xe9e0d6);buildingColliders.push({x,z,hw:9.2,hd:6.2});const glassMat=new THREE.MeshStandardMaterial({color:0xa9d9e9,transparent:true,opacity:.64,roughness:.08});const glass=new THREE.Mesh(new THREE.PlaneGeometry(11.5,3.1),glassMat);glass.position.set(x,2.55,z+6.02);scene.add(glass);addBox(x-6.8,.05,z+6.15,2.1,3.6,.3,0x302a27);addBox(x+6.8,.05,z+6.15,2.1,3.6,.3,0x302a27);addBox(x,.08,z+6.2,2.1,3.7,.28,0x5a4234);const awning=new THREE.Mesh(new THREE.BoxGeometry(15.2,.28,2.0),mat(0xf0d7b0));awning.position.set(x,4.65,z+6.7);awning.rotation.x=-.08;scene.add(awning);const s=signSprite(name,'#201713','#ffffff','#ffb34d',6.8);s.position.set(x,6.15,z+6.35);return s}
+foodShop(98,foodZ,'ATLAS BURGER',0xd06d3d);foodShop(124,foodZ,'MEDINA PIZZA',0xbc513a);foodShop(150,foodZ,'CAFE 3BI9A',0x8c684d);
+for(const x of[94,108,120,134,146,158])bench(x,-124.8,Math.PI);
+// Upgraded waterfront: promenade -> sand beach -> animated sea.
+function waterTexture(){
+  const c=document.createElement('canvas');c.width=256;c.height=256;const x=c.getContext('2d');
+  const g=x.createLinearGradient(0,0,0,256);g.addColorStop(0,'#69d8e8');g.addColorStop(.45,'#238fc1');g.addColorStop(1,'#17668f');
+  x.fillStyle=g;x.fillRect(0,0,256,256);
+  x.globalAlpha=.18;x.strokeStyle='#ffffff';x.lineWidth=2;
+  for(let y=8;y<256;y+=18){x.beginPath();for(let q=-20;q<280;q+=16){x.moveTo(q,y);x.quadraticCurveTo(q+8,y-5,q+16,y)}x.stroke()}
+  x.globalAlpha=1;
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(5,18);t.colorSpace=THREE.SRGBColorSpace;return t
+}
+const waterTex=waterTexture();
+const waterMat=new THREE.MeshPhysicalMaterial({map:waterTex,color:0x58bedb,roughness:.11,metalness:.08,transparent:true,opacity:.92,clearcoat:.55,clearcoatRoughness:.1});
+const water=new THREE.Mesh(new THREE.PlaneGeometry(44,330,1,1),waterMat);water.rotation.x=-Math.PI/2;water.position.set(-158,.16,-5);water.receiveShadow=true;scene.add(water);
+// shallow strip gives a natural coast edge
+const shallowMat=new THREE.MeshStandardMaterial({color:0x72d7dd,transparent:true,opacity:.72,roughness:.22});
+const shallow=new THREE.Mesh(new THREE.PlaneGeometry(8,310),shallowMat);shallow.rotation.x=-Math.PI/2;shallow.position.set(-137,.175,-5);scene.add(shallow);
+// sand beach and promenade
+const sandMat=new THREE.MeshStandardMaterial({color:0xe5c98d,roughness:1});
+const beach=new THREE.Mesh(new THREE.PlaneGeometry(13,230),sandMat);beach.rotation.x=-Math.PI/2;beach.position.set(-132.5,.12,-4);beach.receiveShadow=true;scene.add(beach);
+addBox(-124.7,.09,-5,4.8,.16,330,0xd8d0bd);curbLine(-121.9,-5,.28,330);
+for(let z=-145;z<=145;z+=28){tree(-124.8,z);bench(-126.9,z,Math.PI/2)}
+// beach furniture
+function beachUmbrella(x,z,color){
+  addBox(x,.13,z,.18,2.25,.18,0xd7d7d7);
+  const top=new THREE.Mesh(new THREE.ConeGeometry(2.15,.7,18),mat(color,.72));top.position.set(x,2.72,z);top.rotation.y=.25;scene.add(top)
+}
+for(const [z,c] of [[-88,0xf05b5b],[-52,0xffcf4b],[-16,0x5fc6e8],[20,0xf08fc6],[56,0x78cf78],[92,0xff9855]]){
+  beachUmbrella(-132.2,z,c);
+  addBox(-129.8,.1,z-1.1,1.5,.28,2.5,0xf0f0ea);addBox(-129.8,.35,z-2.05,1.5,.65,.18,0xf0f0ea);
+}
+const seaSign=signSprite('3BI9A BEACH • CORNICHE','#0d425d','#ffffff','#65d6ff',8.8);seaSign.position.set(-124.5,5,-72);
+// One clean bridge links the boulevard to the promenade.
+addBox(-114,.42,35,28,.72,8,0x777e84);for(const z of[31.5,38.5])addBox(-114,1.05,z,28,.25,.18,0xd9dde0);
+// Traffic uses the road centerlines only.
+addTraffic([{x:-158,z:97},{x:158,z:97}],0x8747b5,.18,9);addTraffic([{x:158,z:103},{x:-158,z:103}],0xf1f1f1,.63,8);addTraffic([{x:97,z:-158},{x:97,z:158}],0x2c8c66,.33,8.5);addTraffic([{x:103,z:158},{x:103,z:-158}],0xe46f30,.77,9);
+// Moving NPC pedestrians removed: only real online players walk around the city.
+
+// Extra city traffic for a busier world.
+addTraffic([{x:-150,z:-103},{x:150,z:-103}],0x6e9ed4,.08,8.4);addTraffic([{x:150,z:-97},{x:-150,z:-97}],0xa65b48,.46,7.7);
+addTraffic([{x:-103,z:-150},{x:-103,z:150}],0x704f9b,.22,7.8);addTraffic([{x:-97,z:150},{x:-97,z:-150}],0xe7d36b,.68,8.2);
+addTraffic([{x:-150,z:47},{x:150,z:47}],0x5d737e,.31,7.2);addTraffic([{x:150,z:53},{x:-150,z:53}],0xd45f5f,.84,8.1);
+addTraffic([{x:47,z:-150},{x:47,z:150}],0x35a978,.13,7.5);addTraffic([{x:53,z:150},{x:53,z:-150}],0xe19a3b,.57,8.6);
+
+
+
+const SAVE='3bi9a-world-save-v11';const OLD_SAVE='3bi9a-world-save-v10';let state={coins:500,xp:0,level:1,health:100,mission:'talk',sideJob:'idle',x:0,z:24,shirt:0x24364b,pants:0x252832,owned:['24364b-252832'],ownedCars:['City Compact'],activeCar:'City Compact'};try{state={...state,...JSON.parse(localStorage.getItem(SAVE)||localStorage.getItem(OLD_SAVE)||'{}')}}catch{}player.position.set(state.x,0,state.z);setOutfit(player,state.shirt,state.pants);function save(){if(!driving&&!insideStore){state.x=+player.position.x.toFixed(2);state.z=+player.position.z.toFixed(2)}localStorage.setItem(SAVE,JSON.stringify(state));if(firebaseOnline&&myUid)update(ref(fbDb,'profiles/'+myUid),{name:myName,coins:state.coins,xp:state.xp,level:state.level,shirt:state.shirt,pants:state.pants,ownedCars:state.ownedCars||[],activeCar:state.activeCar||'City Compact',updatedAt:serverTimestamp()}).catch(()=>{})}setInterval(save,1800);
+const coinsEl=document.querySelector('#coins'),lvlEl=document.querySelector('#level'),xpBar=document.querySelector('#xpBar'),hpText=document.querySelector('#hpText'),hpBar=document.querySelector('#hpBar'),title=document.querySelector('#missionTitle'),text=document.querySelector('#missionText'),onlineCountEl=document.querySelector('#onlineCount'),onlineStatusEl=document.querySelector('#onlineStatus'),vehicleLabelEl=document.querySelector('#vehicleLabel');function syncUI(){coinsEl.textContent=state.coins;vehicleLabelEl.textContent=driving?(playerCar.userData.vehicleName||state.activeCar||'CAR'):'ON FOOT';const sc=document.querySelector('#shopCoins');if(sc)sc.textContent=state.coins;lvlEl.textContent=state.level;hpText.textContent=Math.max(0,Math.round(state.health));hpBar.style.width=Math.max(0,state.health)+'%';xpBar.style.width=Math.min(100,state.xp/(state.level*250)*100)+'%';if(state.mission==='talk'){title.textContent='Talk to Yassine at the delivery shop';text.textContent='Walk to the yellow marker and press E.';npcMarker.visible=true;deliveryMarker.visible=false}else if(state.mission==='deliver'){title.textContent='Deliver the package';text.textContent='Reach the blue marker across town.';npcMarker.visible=false;deliveryMarker.visible=true}else{title.textContent='Free roam';text.textContent='Explore the city. Return to Yassine for another delivery.';npcMarker.visible=true;deliveryMarker.visible=false}}syncUI();foodJobMarker.visible=state.sideJob!=='food';foodDropMarker.visible=state.sideJob==='food';
+const keys={};addEventListener('keydown',e=>{keys[e.key.toLowerCase()]=true;if(e.code==='Space'){e.preventDefault();jump()}if(e.key.toLowerCase()==='e'&&!e.repeat)interact()});addEventListener('keyup',e=>keys[e.key.toLowerCase()]=false);
+const dialog=document.querySelector('#dialog'),dialogText=document.querySelector('#dialogText'),storeDialog=document.querySelector('#storeDialog'),garageDialog=document.querySelector('#garageDialog');let insideStore=false,shopOpened=false,selectedGarageCar=null,knocked=0,hitVX=0,hitVZ=0;
+function flatDist(obj){return Math.hypot(player.position.x-obj.position.x,player.position.z-obj.position.z)}
+function enterStore(){insideStore=true;shopOpened=false;camYaw=0;camPitch=.28;camDistance=6.2;toast('Welcome to 3BI9A STYLE')}
+function openClothesMenu(){if(shopOpened)return;shopOpened=true;storeDialog.classList.remove('hidden');camYaw=Math.PI;camPitch=.18;camDistance=4.2;previewSet(state.shirt,state.pants)}
+function leaveStore(){insideStore=false;shopOpened=false;storeDialog.classList.add('hidden');camDistance=8.3;toast('Back to the city')}
+function enterCar(c){if(c)playerCar=c;driving=true;carSpeed=0;player.visible=false;syncUI();toast('Driving '+(playerCar.userData.vehicleName||'car')+' • WASD • E to exit')}
+function exitCar(){driving=false;player.visible=true;const right=new THREE.Vector3(Math.cos(playerCar.rotation.y),0,-Math.sin(playerCar.rotation.y));player.position.set(playerCar.position.x+right.x*2.2,0,playerCar.position.z+right.z*2.2);syncUI();toast('Exited vehicle')}
+function interact(){if(driving){exitCar();return}for(const g of showroomCars){if(flatDist(g.car)<3.1){openGarageCar(g);return}}for(const c of drivableCars){if(!insideStore&&flatDist(c)<3.2){enterCar(c);return}}if(!insideStore&&flatDist(foodJobMarker)<3.0){if(state.sideJob!=='food'){state.sideJob='food';foodJobMarker.visible=false;foodDropMarker.visible=true;save();toast('Food Delivery started • follow green marker')}else toast('Finish your food delivery first');return}if(!insideStore&&flatDist(yassine)<3.8){dialog.classList.remove('hidden');dialogText.textContent=state.mission==='deliver'?'You already have a package. Follow the blue marker!':'I have a delivery for you. Finish it and earn Coins + XP.';return}}
+function reward(){state.coins+=150;state.xp+=120;while(state.xp>=state.level*250){state.xp-=state.level*250;state.level++;toast('LEVEL UP! Level '+state.level)}state.mission='done';save();syncUI();toast('+150 Coins • +120 XP')}
+document.querySelector('#acceptBtn').onclick=()=>{if(state.mission!=='deliver'){state.mission='deliver';syncUI();save();toast('Delivery started!')}dialog.classList.add('hidden')};document.querySelector('#closeBtn').onclick=()=>dialog.classList.add('hidden');document.querySelector('#storeClose').onclick=()=>{storeDialog.classList.add('hidden');shopOpened=false;camDistance=6.2};
+for(const b of document.querySelectorAll('.outfit')){b.onmouseenter=()=>previewSet(parseInt(b.dataset.shirt,16),parseInt(b.dataset.pants,16));b.onclick=()=>{const shirt=parseInt(b.dataset.shirt,16),pants=parseInt(b.dataset.pants,16),price=+b.dataset.price,key=b.dataset.shirt+'-'+b.dataset.pants;state.owned=state.owned||[];if(!state.owned.includes(key)){if(state.coins<price){toast('Not enough Coins');return}state.coins-=price;state.owned.push(key);toast(b.dataset.name+' purchased!')}else toast(b.dataset.name+' equipped!');state.shirt=shirt;state.pants=pants;setOutfit(player,shirt,pants);previewSet(shirt,pants);syncUI();save()}};
+document.querySelector('#resetBtn').onclick=()=>{if(confirm('Reset saved progress?')){localStorage.removeItem(SAVE);location.reload()}};let toastTimer;function toast(msg){const el=document.querySelector('#toast');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2100)}
+
+
+function makeNameSprite(name){const c=document.createElement('canvas');c.width=384;c.height=96;const q=c.getContext('2d');q.font='bold 38px Arial';q.textAlign='center';q.fillStyle='#0009';q.fillRect(0,14,384,65);q.fillStyle='#fff';q.fillText(name.slice(0,16),192,59);const tx=new THREE.CanvasTexture(c);tx.colorSpace=THREE.SRGBColorSpace;const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:tx,transparent:true,depthTest:false}));sp.position.y=3.75;sp.scale.set(3.2,.8,1);return sp}
+function addRemotePlayer(uid,data){if(uid===myUid||remotePlayers.has(uid))return;const g=makeHuman(data.shirt||0x5277a3,data.pants||0x252832);g.position.set(data.x||0,data.y||0,data.z||0);g.rotation.y=data.rotation||0;g.add(makeNameSprite(data.name||'Player'));scene.add(g);const car=makeCar(0x3576b8);car.position.copy(g.position);car.rotation.y=g.rotation.y;const carName=makeNameSprite(data.name||'Player');carName.position.y=3.15;car.add(carName);scene.add(car);remotePlayers.set(uid,{group:g,car,target:new THREE.Vector3(g.position.x,g.position.y,g.position.z),rot:g.rotation.y,last:new THREE.Vector3(g.position.x,g.position.y,g.position.z),walk:0,moving:false,driving:!!data.driving});}
+function updateRemotePlayer(uid,data){if(uid===myUid)return;let r=remotePlayers.get(uid);if(!r){addRemotePlayer(uid,data);r=remotePlayers.get(uid);if(!r)return}r.target.set(Number(data.x)||0,Number(data.y)||0,Number(data.z)||0);r.rot=Number(data.rotation)||0;r.driving=!!data.driving;if(data.shirt)setOutfit(r.group,data.shirt,data.pants||0x252832);}
+function removeRemotePlayer(uid){const r=remotePlayers.get(uid);if(r){scene.remove(r.group);scene.remove(r.car);remotePlayers.delete(uid)}}
+function updateRemotePlayers(dt){for(const r of remotePlayers.values()){const d=r.group.position.distanceTo(r.target);r.moving=d>.04;r.group.position.lerp(r.target,Math.min(1,dt*12));r.group.rotation.y+=Math.atan2(Math.sin(r.rot-r.group.rotation.y),Math.cos(r.rot-r.group.rotation.y))*Math.min(1,dt*12);r.car.position.lerp(r.target,Math.min(1,dt*12));r.car.rotation.y+=Math.atan2(Math.sin(r.rot-r.car.rotation.y),Math.cos(r.rot-r.car.rotation.y))*Math.min(1,dt*12);if(r.moving){r.walk+=dt*9;animateHuman(r.group,r.walk,1)}else animateHuman(r.group,0,0);r.group.visible=!r.driving;r.car.visible=r.driving;}}
+function networkTick(){if(!firebaseOnline||!myUid)return;const now=performance.now();if(now-lastNetSend<90)return;lastNetSend=now;const obj=driving?playerCar:player;update(ref(fbDb,'players/'+myUid),{name:myName,x:+obj.position.x.toFixed(2),y:+obj.position.y.toFixed(2),z:+obj.position.z.toFixed(2),rotation:+obj.rotation.y.toFixed(3),shirt:state.shirt,pants:state.pants,driving,vehicle:driving?(playerCar.userData.vehicleName||'Car'):'',lastSeen:serverTimestamp()}).catch(()=>{});}
+async function joinOnlineWorld(name){myName=(name||'Player').trim().slice(0,16)||'Player';localStorage.setItem('3bi9a-player-name',myName);const btn=document.querySelector('#joinWorldBtn');btn.disabled=true;btn.textContent='CONNECTING...';try{await setPersistence(fbAuth,browserLocalPersistence);const cred=await signInAnonymously(fbAuth);myUid=cred.user.uid;firebaseOnline=true;onlineStatusEl.textContent='● ONLINE';onlineStatusEl.classList.remove('offline');const myRef=ref(fbDb,'players/'+myUid);await onDisconnect(myRef).remove();await set(myRef,{name:myName,x:player.position.x,y:0,z:player.position.z,rotation:player.rotation.y,shirt:state.shirt,pants:state.pants,driving:false,lastSeen:serverTimestamp()});onValue(ref(fbDb,'players'),snap=>{const data=snap.val()||{};const ids=new Set(Object.keys(data));onlineCountEl.textContent=ids.length;for(const [uid,p] of Object.entries(data))if(uid!==myUid)updateRemotePlayer(uid,p);for(const uid of [...remotePlayers.keys()])if(!ids.has(uid))removeRemotePlayer(uid);});document.querySelector('#nameDialog').classList.add('hidden');toast('Connected as '+myName);}catch(err){console.error(err);firebaseOnline=false;onlineStatusEl.textContent='● FIREBASE SETUP NEEDED';onlineStatusEl.classList.add('offline');btn.disabled=false;btn.textContent='TRY AGAIN';toast('Enable Anonymous Auth + database rules in Firebase');}}
+const savedName=localStorage.getItem('3bi9a-player-name')||'';document.querySelector('#playerNameInput').value=savedName;document.querySelector('#joinWorldBtn').onclick=()=>joinOnlineWorld(document.querySelector('#playerNameInput').value);document.querySelector('#playerNameInput').addEventListener('keydown',e=>{if(e.key==='Enter')joinOnlineWorld(e.target.value)});
+
+let camYaw=0,camPitch=.38,camDistance=8.3,dragging=false,lastX=0,lastY=0;renderer.domElement.addEventListener('mousedown',e=>{if(e.button!==0)return;dragging=true;lastX=e.clientX;lastY=e.clientY});addEventListener('mouseup',()=>dragging=false);addEventListener('mousemove',e=>{if(!dragging)return;camYaw-=(e.clientX-lastX)*.005;camPitch=THREE.MathUtils.clamp(camPitch-(e.clientY-lastY)*.004,-.05,.9);lastX=e.clientX;lastY=e.clientY});renderer.domElement.addEventListener('wheel',e=>{camDistance=THREE.MathUtils.clamp(camDistance+e.deltaY*.01,4.5,13)},{passive:true});
+let touchCamId=null,touchLastX=0,touchLastY=0;renderer.domElement.addEventListener('touchstart',e=>{for(const t of e.changedTouches){if(t.clientX>innerWidth*.42){touchCamId=t.identifier;touchLastX=t.clientX;touchLastY=t.clientY;break}}},{passive:true});renderer.domElement.addEventListener('touchmove',e=>{for(const t of e.changedTouches){if(t.identifier===touchCamId){camYaw-=(t.clientX-touchLastX)*.007;camPitch=THREE.MathUtils.clamp(camPitch-(t.clientY-touchLastY)*.006,-.05,.9);touchLastX=t.clientX;touchLastY=t.clientY}}},{passive:true});renderer.domElement.addEventListener('touchend',e=>{for(const t of e.changedTouches)if(t.identifier===touchCamId)touchCamId=null},{passive:true});
+let joy={x:0,y:0,sprint:false};const jb=document.querySelector('#joyBase'),js=document.querySelector('#joyStick');function setJoy(e){const r=jb.getBoundingClientRect(),t=e.touches?e.touches[0]:e;let x=t.clientX-(r.left+r.width/2),y=t.clientY-(r.top+r.height/2);const l=Math.hypot(x,y),m=38;if(l>m){x=x/l*m;y=y/l*m}joy.x=x/m;joy.y=y/m;js.style.transform=`translate(${x}px,${y}px)`}jb.addEventListener('touchstart',setJoy,{passive:false});jb.addEventListener('touchmove',e=>{e.preventDefault();setJoy(e)},{passive:false});jb.addEventListener('touchend',()=>{joy.x=joy.y=0;js.style.transform=''});document.querySelector('#mobileInteract').onclick=interact;document.querySelector('#mobileJump').onclick=jump;const runBtn=document.querySelector('#mobileSprint');runBtn.addEventListener('touchstart',e=>{e.preventDefault();joy.sprint=true});runBtn.addEventListener('touchend',()=>joy.sprint=false);
+let vy=0,onGround=true,swimming=false,swimBoost=0;
+function jump(){
+  if(swimming&&!driving&&!knocked){swimBoost=.65;return}
+  if(!driving&&!knocked&&onGround&&dialog.classList.contains('hidden')&&storeDialog.classList.contains('hidden')&&garageDialog.classList.contains('hidden')){vy=7.4;onGround=false}
+}
+function animateHuman(h,t,amount=1){const L=h.userData.limbs;if(!L)return;const s=Math.sin(t),c=Math.cos(t);L.leftArm.pivot.rotation.x=s*.62*amount;L.rightArm.pivot.rotation.x=-s*.62*amount;L.leftArm.forePivot.rotation.x=Math.max(0,-s)*.32*amount;L.rightArm.forePivot.rotation.x=Math.max(0,s)*.32*amount;L.leftLeg.pivot.rotation.x=-s*.72*amount;L.rightLeg.pivot.rotation.x=s*.72*amount;L.leftLeg.knee.rotation.x=Math.max(0,s)*.48*amount;L.rightLeg.knee.rotation.x=Math.max(0,-s)*.48*amount}
+function moveRoute(obj,points,t,speed,dt){const a=points[0],b=points[1],dx=b.x-a.x,dz=b.z-a.z,len=Math.hypot(dx,dz);t=(t+speed*dt/len)%2;let q=t<=1?t:2-t;obj.position.set(a.x+(b.x-a.x)*q,0,a.z+(b.z-a.z)*q);const dir=t<=1?1:-1;obj.rotation.y=Math.atan2(dx*dir,dz*dir);return t}
+
+function pointBlocked(x,z){for(const b of buildingColliders)if(Math.abs(x-b.x)<b.hw&&Math.abs(z-b.z)<b.hd)return true;if(!driving)for(const c of drivableCars)if(Math.hypot(x-c.position.x,z-c.position.z)<1.65)return true;for(const t of traffic)if(Math.hypot(x-t.car.position.x,z-t.car.position.z)<1.35)return true;return false}
+function movePlayerSafe(dx,dz){let nx=THREE.MathUtils.clamp(player.position.x+dx,-173,173),nz=THREE.MathUtils.clamp(player.position.z+dz,-173,173);if(!pointBlocked(nx,player.position.z))player.position.x=nx;if(!pointBlocked(player.position.x,nz))player.position.z=nz}
+function knockPlayer(car,speed=8){if(knocked>0||driving||insideStore)return;const dx=player.position.x-car.position.x,dz=player.position.z-car.position.z,l=Math.hypot(dx,dz)||1;hitVX=dx/l*(5.5+speed*.28);hitVZ=dz/l*(5.5+speed*.28);vy=4.3;onGround=false;knocked=1.15;state.health=Math.max(0,state.health-15);syncUI();toast('-15 health • car hit!');if(state.health<=0){state.health=100;player.position.set(0,0,24);hitVX=hitVZ=0;knocked=.8;syncUI();toast('You passed out and respawned')};save()}
+function carBlocked(x,z){for(const b of buildingColliders)if(Math.abs(x-b.x)<b.hw+1.05&&Math.abs(z-b.z)<b.hd+1.65)return true;return false}
+function updateDrive(dt){let throttle=0,steer=0;if(keys['w']||keys['arrowup'])throttle+=1;if(keys['s']||keys['arrowdown'])throttle-=1;if(keys['a']||keys['arrowleft'])steer+=1;if(keys['d']||keys['arrowright'])steer-=1;throttle+=-joy.y;steer+=-joy.x;const accel=throttle!==0?18*throttle:-carSpeed*2.6;carSpeed=THREE.MathUtils.clamp(carSpeed+accel*dt,-8,24);if(Math.abs(throttle)<.05&&Math.abs(carSpeed)<.3)carSpeed=0;if(Math.abs(carSpeed)>.15)playerCar.rotation.y+=steer*dt*1.35*Math.sign(carSpeed)*(0.45+Math.min(1,Math.abs(carSpeed)/10));const f=new THREE.Vector3(Math.sin(playerCar.rotation.y),0,Math.cos(playerCar.rotation.y));const nx=THREE.MathUtils.clamp(playerCar.position.x+f.x*carSpeed*dt,-171,171),nz=THREE.MathUtils.clamp(playerCar.position.z+f.z*carSpeed*dt,-171,171);if(!carBlocked(nx,nz)){playerCar.position.x=nx;playerCar.position.z=nz}else{carSpeed*=-.16}for(const w of playerCar.userData.wheels||[])w.rotation.x-=carSpeed*dt*2.3}
+
+const radar=document.querySelector('#radar'),rctx=radar.getContext('2d');function drawRadar(){const w=radar.width,h=radar.height,cx=w/2,cy=h/2,scale=.46;rctx.clearRect(0,0,w,h);rctx.save();rctx.beginPath();rctx.arc(cx,cy,w*.48,0,Math.PI*2);rctx.clip();rctx.fillStyle='#193728';rctx.fillRect(0,0,w,h);rctx.strokeStyle='#69727a';rctx.lineWidth=22;const radarObj=driving?playerCar:player;const worldToMap=(x,z)=>[cx+(x-radarObj.position.x)*scale,cy+(z-radarObj.position.z)*scale];let a=worldToMap(-110,0),b=worldToMap(110,0);rctx.beginPath();rctx.moveTo(...a);rctx.lineTo(...b);rctx.stroke();a=worldToMap(0,-110);b=worldToMap(0,110);rctx.beginPath();rctx.moveTo(...a);rctx.lineTo(...b);rctx.stroke();function dot(x,z,color,size=7){const p=worldToMap(x,z);rctx.fillStyle=color;rctx.beginPath();rctx.arc(p[0],p[1],size,0,Math.PI*2);rctx.fill()}dot(storeX,storeZ+7.0,'#ff69d4',6);dot(garageX,garageZ,'#ffd84d',7);dot(parkX,parkZ,'#79e58f',6);dot(busX,busZ,'#ff9d3b',6);dot(towerX,towerZ,'#65d6ff',6);dot(132,-138,'#ff7b55',6);dot(-132,-18,'#63d7ee',6);if(state.mission==='talk'||state.mission==='done')dot(27,-18,'#ffd84d',7);if(state.mission==='deliver')dot(-35,34,'#5de0ff',8);if(state.sideJob==='food')dot(-82,126,'#86f7a1',8);else dot(124,-125,'#ff8c42',6);for(const rp of remotePlayers.values())dot(rp.group.position.x,rp.group.position.z,'#ffffff',4);rctx.translate(cx,cy);rctx.rotate(-(driving?playerCar.rotation.y:player.rotation.y));rctx.fillStyle='#ffffff';rctx.beginPath();rctx.moveTo(0,-11);rctx.lineTo(7,8);rctx.lineTo(-7,8);rctx.closePath();rctx.fill();rctx.restore();rctx.strokeStyle='#ffffff66';rctx.lineWidth=4;rctx.beginPath();rctx.arc(cx,cy,w*.47,0,Math.PI*2);rctx.stroke()}
+const clock=new THREE.Clock();let walkT=0;
+function animate(){requestAnimationFrame(animate);const dt=Math.min(clock.getDelta(),.035);let side=0,forward=0;if(keys['w']||keys['arrowup'])forward+=1;if(keys['s']||keys['arrowdown'])forward-=1;if(keys['a']||keys['arrowleft'])side-=1;if(keys['d']||keys['arrowright'])side+=1;side+=joy.x;forward+=-joy.y;const len=Math.hypot(side,forward),moving=len>.08;
+ if(driving){updateDrive(dt);animateHuman(player,0,0)}else if(knocked>0){knocked-=dt;player.position.x+=hitVX*dt;player.position.z+=hitVZ*dt;hitVX*=Math.pow(.08,dt);hitVZ*=Math.pow(.08,dt);player.rotation.z=THREE.MathUtils.lerp(player.rotation.z,Math.PI*.42,Math.min(1,dt*12));animateHuman(player,0,0)}else{player.rotation.z=THREE.MathUtils.lerp(player.rotation.z,0,Math.min(1,dt*10));if(moving&&dialog.classList.contains('hidden')&&storeDialog.classList.contains('hidden')&&garageDialog.classList.contains('hidden')){side/=len;forward/=len;const fwd=new THREE.Vector3(-Math.sin(camYaw),0,-Math.cos(camYaw)),right=new THREE.Vector3(Math.cos(camYaw),0,-Math.sin(camYaw)),dir=fwd.multiplyScalar(forward).add(right.multiplyScalar(side)).normalize();const speed=swimming?3.25:((keys['shift']||joy.sprint)?9.3:5.6);movePlayerSafe(dir.x*speed*dt,dir.z*speed*dt);const targetRot=Math.atan2(dir.x,dir.z);player.rotation.y+=Math.atan2(Math.sin(targetRot-player.rotation.y),Math.cos(targetRot-player.rotation.y))*Math.min(1,dt*12);walkT+=dt*((keys['shift']||joy.sprint)?13:9);animateHuman(player,walkT,1)}else animateHuman(player,0,0)}
+ if(!driving){
+   const wasSwimming=swimming;
+   swimming=player.position.x<-136.3&&Math.abs(player.position.z)<160;
+   if(swimming){
+     // keep shoulders/head above the surface and add a gentle bob
+     vy=0;onGround=false;swimBoost=Math.max(0,swimBoost-dt*1.25);
+     const swimY=-.72+Math.sin(performance.now()*.004)*.08+swimBoost*.42;
+     player.position.y=THREE.MathUtils.lerp(player.position.y,swimY,Math.min(1,dt*5.5));
+     if(moving){walkT+=dt*5.5;animateHuman(player,walkT,.52)}
+     player.rotation.z=THREE.MathUtils.lerp(player.rotation.z,Math.sin(performance.now()*.004)*.035,Math.min(1,dt*4));
+   }else{
+     if(wasSwimming&&player.position.y<0)player.position.y=0;
+     vy-=18*dt;player.position.y+=vy*dt;if(player.position.y<=0){player.position.y=0;vy=0;onGround=true}
+   }
+ }
+ // Clothes shop doorway: entering is automatic; no checkpoint needed.
+ if(!driving){const inDoor=Math.abs(player.position.x-storeX)<2.05&&player.position.z<storeZ+5.65&&player.position.z>storeZ+3.0;if(inDoor&&!insideStore)enterStore();if(insideStore&&player.position.z>storeZ+5.9)leaveStore();if(insideStore&&!shopOpened&&player.position.z<storeZ+2.7)openClothesMenu()}
+ if(driving&&!dragging&&touchCamId===null){const followYaw=playerCar.rotation.y+Math.PI;camYaw+=Math.atan2(Math.sin(followYaw-camYaw),Math.cos(followYaw-camYaw))*Math.min(1,dt*4.8)}let target=driving?playerCar:player,focus=new THREE.Vector3(target.position.x,(driving?1.15:target.position.y+1.65),target.position.z),horizontal=Math.cos(camPitch)*camDistance,desired;if(insideStore){focus.set(player.position.x,1.65,player.position.z-.3);desired=new THREE.Vector3(storeX+5.1,3.15,storeZ+4.6)}else desired=new THREE.Vector3(focus.x+Math.sin(camYaw)*horizontal,focus.y+Math.sin(camPitch)*camDistance+1.0,focus.z+Math.cos(camYaw)*horizontal);camera.position.lerp(desired,1-Math.pow(.0003,dt));camera.lookAt(focus.x,focus.y+.15,focus.z);
+ waterTex.offset.y=(waterTex.offset.y+dt*.018)%1;waterTex.offset.x=(waterTex.offset.x+dt*.006)%1;
+ npcMarker.rotation.y+=dt;deliveryMarker.rotation.y+=dt;foodJobMarker.rotation.y+=dt;foodDropMarker.rotation.y+=dt;if(!driving&&state.mission==='deliver'&&flatDist(deliveryMarker)<2.2)reward();
+ for(const t of traffic){t.t=moveRoute(t.car,t.route,t.t,t.speed,dt);t.hitCool=Math.max(0,t.hitCool-dt);if(!driving&&!insideStore&&t.hitCool<=0&&flatDist(t.car)<1.55){knockPlayer(t.car,t.speed);t.hitCool=1.5}}if(!driving&&state.sideJob==='food'&&flatDist(foodDropMarker)<2.4){state.sideJob='idle';state.coins+=220;state.xp+=150;while(state.xp>=state.level*250){state.xp-=state.level*250;state.level++}foodDropMarker.visible=false;foodJobMarker.visible=true;syncUI();save();toast('+220 Coins • Food Delivery complete!')}updateRemotePlayers(dt);networkTick();drawRadar();renderer.render(scene,camera);if(!storeDialog.classList.contains('hidden')&&garageDialog.classList.contains('hidden')){previewPlayer.rotation.y+=dt*.45;previewRenderer.render(previewScene,previewCam)}}animate();
+addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);resizePreview()});
+</script>
+</body>
+</html>
