@@ -1,0 +1,13 @@
+3BI9A WORLD ONLINE V9 - FIREBASE SETUP
+
+1. Open Firebase Console -> bi9agame.
+2. Authentication -> Sign-in method -> enable Anonymous.
+3. Realtime Database -> Rules -> paste firebase-database-rules-v9.json and Publish.
+4. Upload 3bi9a-world-online-v9.html to Vercel (or use it as index.html).
+5. Open the site in two different browsers/devices, choose different names, and both players should appear.
+
+Paths used:
+/players/{uid}   live presence + position
+/profiles/{uid}  coins/xp/clothes/cars profile snapshot
+
+The database rules require Firebase Authentication. Do not use public read/write rules for production.
