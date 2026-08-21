@@ -1,88 +1,423 @@
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no" />
-  <title>Country Rush LIVE</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-  <style>
-    :root{--bg:#070912;--panel:rgba(16,20,36,.76);--line:rgba(255,255,255,.11);--text:#fff;--muted:#9da8c8);}
-    *{box-sizing:border-box} html,body{margin:0;background:#05070c;color:#fff;font-family:Inter,system-ui,sans-serif;min-height:100%}
-    body{display:grid;place-items:center;padding:14px;background:radial-gradient(circle at 50% -10%,#25366d 0,#11182d 34%,#05070c 70%);overflow-x:hidden}
-    .app{width:min(100%,520px);aspect-ratio:9/16;min-height:740px;border:1px solid rgba(255,255,255,.12);border-radius:30px;overflow:hidden;position:relative;background:
-      radial-gradient(circle at 80% 15%,rgba(104,77,255,.32),transparent 26%),linear-gradient(180deg,#12182e 0%,#0a1020 34%,#080a12 100%);box-shadow:0 30px 100px rgba(0,0,0,.55)}
-    .noise{position:absolute;inset:0;pointer-events:none;opacity:.16;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 140 140' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.12'/%3E%3C/svg%3E")}
-    header{height:112px;padding:19px 20px 12px;display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:2}
-    .eyebrow{font-size:11px;font-weight:900;letter-spacing:.2em;color:#9bb4ff;text-transform:uppercase}.title{font-size:29px;font-weight:900;letter-spacing:-1.4px;line-height:1.05;margin-top:3px}.live{display:flex;align-items:center;gap:7px;background:rgba(255,52,92,.15);border:1px solid rgba(255,71,107,.45);padding:7px 10px;border-radius:999px;font-size:11px;font-weight:900;letter-spacing:.09em}.dot{width:8px;height:8px;border-radius:50%;background:#ff365c;box-shadow:0 0 14px #ff365c;animation:pulse 1.25s infinite}@keyframes pulse{50%{opacity:.45;transform:scale(.8)}}
-    .topbar{margin:0 16px 12px;display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;position:relative;z-index:2}.stat{background:var(--panel);backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:14px;padding:9px 11px}.stat b{display:block;font-size:15px}.stat span{display:block;font-size:9px;color:#92a0c5;font-weight:700;margin-top:2px;text-transform:uppercase;letter-spacing:.08em}
-    .track-wrap{margin:0 13px;position:relative;height:470px;border:1px solid rgba(255,255,255,.1);border-radius:22px;overflow:hidden;background:linear-gradient(90deg,#11241b,#183925 28%,#21472d 74%,#10271b);box-shadow:inset 0 0 55px rgba(0,0,0,.3)}
-    .track-wrap:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 46px,rgba(255,255,255,.035) 46px 48px),linear-gradient(180deg,rgba(255,255,255,.04),transparent 30%);pointer-events:none}
-    .finish{position:absolute;right:34px;top:0;bottom:0;width:16px;opacity:.92;background-color:#fff;background-image:linear-gradient(45deg,#111 25%,transparent 25%),linear-gradient(-45deg,#111 25%,transparent 25%),linear-gradient(45deg,transparent 75%,#111 75%),linear-gradient(-45deg,transparent 75%,#111 75%);background-size:16px 16px;background-position:0 0,0 8px,8px -8px,-8px 0}
-    .lane{height:25%;position:relative;border-bottom:1px dashed rgba(255,255,255,.15)}.lane:last-child{border-bottom:0}.lane-info{position:absolute;left:11px;top:11px;z-index:3;background:rgba(5,8,13,.72);border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:7px 9px;display:flex;align-items:center;gap:8px;min-width:126px;backdrop-filter:blur(8px)}.flag{font-size:25px;filter:drop-shadow(0 3px 3px rgba(0,0,0,.3))}.country{font-size:11px;font-weight:900}.score{font-size:9px;color:#a7b5d7;margin-top:2px;font-weight:700}.rank{position:absolute;right:8px;top:8px;font-size:10px;background:#232d4c;border:1px solid rgba(255,255,255,.13);padding:4px 6px;border-radius:8px;font-weight:900}
-    .racer{position:absolute;left:8px;bottom:14px;z-index:2;will-change:transform;transition:filter .15s}.horse{font-size:43px;display:inline-block;filter:drop-shadow(0 8px 8px rgba(0,0,0,.35));transform:scaleX(-1);animation:gallop .38s infinite ease-in-out}.racer.boost .horse{animation-duration:.18s;filter:drop-shadow(0 0 12px rgba(255,226,91,.8))}.boostfx{opacity:0;position:absolute;right:30px;bottom:14px;font-size:20px;letter-spacing:-5px;transition:opacity .15s}.racer.boost .boostfx{opacity:1}@keyframes gallop{50%{transform:scaleX(-1) translateY(-5px) rotate(-2deg)}}
-    .gift-pop{position:absolute;z-index:10;font-weight:900;font-size:13px;text-shadow:0 2px 8px #000;pointer-events:none;animation:floatGift 1s forwards}@keyframes floatGift{to{transform:translateY(-50px) scale(1.1);opacity:0}}
-    .controls{padding:12px 16px 14px;position:relative;z-index:2}.control-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}.control-title b{font-size:12px}.control-title span{font-size:9px;color:#8693b9}.gifts{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}.gift-btn{border:1px solid rgba(255,255,255,.12);background:rgba(18,24,42,.86);color:#fff;border-radius:14px;padding:8px 3px;cursor:pointer;font:inherit;transition:.15s}.gift-btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.3)}.gift-btn .em{font-size:22px}.gift-btn b{font-size:9px;display:block;margin-top:3px}.gift-btn small{font-size:8px;color:#8fa0c7;display:block;margin-top:2px}.actions{display:flex;gap:8px;margin-top:9px}.action{flex:1;border:0;border-radius:12px;padding:9px;font-weight:900;font-size:10px;cursor:pointer;background:#fff;color:#08101f}.action.alt{background:#202943;color:#fff;border:1px solid rgba(255,255,255,.1)}
-    .overlay{position:absolute;inset:0;background:rgba(3,6,12,.82);backdrop-filter:blur(12px);z-index:50;display:none;place-items:center;text-align:center;padding:30px}.overlay.show{display:grid}.winflag{font-size:82px;animation:winpop .7s ease}@keyframes winpop{50%{transform:scale(1.18) rotate(4deg)}}.winner h2{font-size:34px;margin:4px 0 6px}.winner p{margin:0;color:#a8b5d6;font-size:13px}.winner button{margin-top:18px;border:0;background:#fff;padding:12px 18px;border-radius:14px;font-weight:900;cursor:pointer}.confetti{position:absolute;inset:0;overflow:hidden;pointer-events:none}.piece{position:absolute;top:-30px;font-size:18px;animation:fall 2.7s linear forwards}@keyframes fall{to{transform:translateY(900px) rotate(720deg)}}
-    .ticker{position:absolute;left:0;right:0;bottom:0;height:25px;background:rgba(0,0,0,.35);border-top:1px solid rgba(255,255,255,.07);display:flex;align-items:center;overflow:hidden}.ticker div{white-space:nowrap;font-size:9px;color:#aab5d0;font-weight:700;animation:ticker 13s linear infinite}@keyframes ticker{from{transform:translateX(100%)}to{transform:translateX(-100%)}}
-    @media(max-width:560px){body{padding:0}.app{width:100%;min-height:100vh;border-radius:0;border:0;aspect-ratio:auto}.track-wrap{height:46vh;min-height:410px}}
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>تحدي الدول العربية</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070a12;
+  --panel:#101624;
+  --panel2:#151d2f;
+  --line:rgba(255,255,255,.08);
+  --text:#fff;
+  --muted:#9aa7bd;
+  --gold:#ffd84d;
+  --blue:#31c8ff;
+  --green:#39e58c;
+  --red:#ff4d6d;
+}
+html,body{
+  min-height:100%;
+  background:#050810;
+  color:var(--text);
+  font-family:Tahoma,Arial,sans-serif;
+}
+body{
+  display:flex;
+  justify-content:center;
+}
+.app{
+  width:100%;
+  max-width:480px;
+  min-height:100vh;
+  padding:10px;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(36,95,255,.20),transparent 32%),
+    linear-gradient(180deg,#070a12,#05070d);
+}
+.header{
+  position:relative;
+  padding:12px 12px 10px;
+  border:1px solid var(--line);
+  border-radius:18px;
+  background:rgba(15,22,38,.92);
+  text-align:center;
+  box-shadow:0 12px 30px rgba(0,0,0,.28);
+}
+.live{
+  position:absolute;
+  top:9px;
+  left:10px;
+  direction:ltr;
+  display:flex;align-items:center;gap:5px;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(255,77,109,.12);
+  border:1px solid rgba(255,77,109,.28);
+  font-size:10px;
+  font-weight:900;
+  color:#ff93a5;
+}
+.dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--red);
+  box-shadow:0 0 10px var(--red);
+  animation:pulse 1s infinite alternate;
+}
+@keyframes pulse{to{opacity:.35}}
+.header h1{
+  font-size:23px;
+  font-weight:1000;
+  letter-spacing:-.5px;
+}
+.header h1 span{color:var(--gold)}
+.callout{
+  margin-top:7px;
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding:7px 13px;
+  border-radius:999px;
+  background:linear-gradient(135deg,var(--gold),#ff9c2b);
+  color:#121212;
+  font-size:15px;
+  font-weight:1000;
+}
+.sub{
+  margin-top:7px;
+  color:var(--muted);
+  font-size:11px;
+}
+
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:10px 2px 7px;
+}
+.section-title b{font-size:13px}
+.section-title span{font-size:10px;color:var(--muted)}
+
+.ranking{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:6px;
+}
+.rank-item{
+  min-width:0;
+  padding:7px 4px 6px;
+  border-radius:13px;
+  background:var(--panel);
+  border:1px solid var(--line);
+  text-align:center;
+  overflow:hidden;
+}
+.rank-item.first{
+  border-color:rgba(255,216,77,.42);
+  background:linear-gradient(180deg,rgba(255,216,77,.17),rgba(15,22,38,.96));
+}
+.rank-item img{
+  width:38px;height:27px;object-fit:cover;
+  border-radius:5px;
+  border:1px solid rgba(255,255,255,.12);
+}
+.rank-no{
+  font-size:10px;
+  color:var(--muted);
+  margin-bottom:3px;
+  font-weight:900;
+}
+.rank-name{
+  margin-top:3px;
+  font-size:10px;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.rank-score{
+  margin-top:2px;
+  font-size:16px;
+  font-weight:1000;
+  color:var(--gold);
+}
+
+.grid{
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:7px;
+}
+.country{
+  position:relative;
+  display:grid;
+  grid-template-columns:58px 1fr 42px;
+  align-items:center;
+  gap:8px;
+  min-height:72px;
+  padding:8px;
+  border-radius:15px;
+  background:linear-gradient(145deg,#111a2b,#0c1220);
+  border:1px solid var(--line);
+  cursor:pointer;
+  user-select:none;
+  transition:.15s ease;
+  overflow:hidden;
+}
+.country:active{transform:scale(.98)}
+.country.leading{
+  border-color:rgba(255,216,77,.34);
+  background:linear-gradient(145deg,rgba(255,216,77,.13),#111827);
+}
+.flag{
+  width:58px;height:40px;
+  object-fit:cover;
+  border-radius:8px;
+  border:1px solid rgba(255,255,255,.11);
+}
+.info{min-width:0}
+.name{
+  font-size:13px;
+  font-weight:1000;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.score{
+  margin-top:3px;
+  font-size:21px;
+  line-height:1;
+  font-weight:1000;
+}
+.pts{
+  margin-top:2px;
+  font-size:8px;
+  color:var(--muted);
+}
+.plus-btn{
+  width:40px;height:40px;
+  border-radius:12px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--blue),#536bff);
+  font-size:17px;
+  font-weight:1000;
+  box-shadow:0 7px 16px rgba(49,200,255,.17);
+}
+.rank-badge{
+  position:absolute;
+  top:4px;right:4px;
+  min-width:20px;height:18px;
+  padding:0 4px;
+  border-radius:7px;
+  display:grid;place-items:center;
+  font-size:8px;
+  font-weight:1000;
+  background:rgba(4,8,16,.86);
+  border:1px solid rgba(255,255,255,.1);
+}
+.pop{
+  position:absolute;
+  left:44px;
+  bottom:18px;
+  color:var(--green);
+  font-size:24px;
+  font-weight:1000;
+  pointer-events:none;
+  animation:up .65s ease forwards;
+}
+@keyframes up{
+  from{opacity:1;transform:translateY(8px) scale(.8)}
+  to{opacity:0;transform:translateY(-35px) scale(1.2)}
+}
+.controls{
+  margin-top:8px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+}
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:9px 8px;
+  font-family:inherit;
+  font-size:11px;
+  font-weight:900;
+  cursor:pointer;
+}
+.undo{background:#17243a;color:#fff}
+.reset{
+  background:rgba(255,77,109,.12);
+  border:1px solid rgba(255,77,109,.18);
+  color:#ff8699;
+}
+.last{
+  margin-top:7px;
+  padding:8px 10px;
+  border-radius:11px;
+  background:#0b111d;
+  border:1px solid rgba(255,255,255,.05);
+  font-size:10px;
+  color:var(--muted);
+  text-align:center;
+  min-height:30px;
+}
+.last b{color:white}
+
+@media(max-width:390px){
+  .app{padding:7px}
+  .header h1{font-size:20px}
+  .callout{font-size:13px}
+  .grid{gap:5px}
+  .country{
+    grid-template-columns:49px 1fr 35px;
+    gap:6px;
+    padding:6px;
+    min-height:65px
+  }
+  .flag{width:49px;height:34px}
+  .plus-btn{width:34px;height:34px;font-size:15px}
+  .name{font-size:11px}
+  .score{font-size:18px}
+  .ranking{gap:4px}
+  .rank-item{padding:5px 2px}
+  .rank-item img{width:32px;height:23px}
+  .rank-name{font-size:9px}
+}
+</style>
 </head>
 <body>
-<div class="app" id="app">
-  <div class="noise"></div>
-  <header><div><div class="eyebrow">TikTok interactive race</div><div class="title">COUNTRY<br>RUSH <span style="color:#ff4168">LIVE</span></div></div><div class="live"><span class="dot"></span>LIVE</div></header>
-  <div class="topbar"><div class="stat"><b id="round">1</b><span>Round</span></div><div class="stat"><b id="gifts">0</b><span>Gifts</span></div><div class="stat"><b id="leader">—</b><span>Leader</span></div></div>
-  <div class="track-wrap" id="track"><div class="finish"></div></div>
-  <div class="controls">
-    <div class="control-title"><b>TEST LIVE GIFTS</b><span>Choose a country, then tap a gift</span></div>
-    <div class="gifts" id="countryBtns"></div>
-    <div class="actions"><button class="action alt" id="resetBtn">RESET RACE</button><button class="action" id="randomBtn">RANDOM GIFT ⚡</button></div>
+<div class="app">
+
+  <header class="header">
+    <div class="live"><span class="dot"></span>LIVE</div>
+    <h1>🌍 تحدي <span>الدول العربية</span></h1>
+    <div class="callout">✍️ اكتب دولتك + نقطة</div>
+    <div class="sub">كل نقطة ترفع دولتك في الترتيب 🔥</div>
+  </header>
+
+  <div class="section-title">
+    <b>🏆 الترتيب المباشر</b>
+    <span>أفضل 5 دول</span>
   </div>
-  <div class="ticker"><div>🌹 Rose = +2m &nbsp; • &nbsp; 🎁 Present = +5m &nbsp; • &nbsp; 🚀 Rocket = +12m &nbsp; • &nbsp; 👑 Crown = +25m &nbsp; • &nbsp; First country to the finish line wins!</div></div>
-  <div class="overlay" id="overlay"><div class="confetti" id="confetti"></div><div class="winner"><div class="winflag" id="winFlag"></div><h2 id="winTitle"></h2><p id="winSub"></p><button id="nextBtn">NEXT RACE</button></div></div>
+  <div id="ranking" class="ranking"></div>
+
+  <div class="section-title">
+    <b>⚔️ اختر الدولة</b>
+    <span>اضغط لإضافة نقطة</span>
+  </div>
+  <main id="grid" class="grid"></main>
+
+  <div class="controls">
+    <button id="undo" class="btn undo">↩️ تراجع عن آخر نقطة</button>
+    <button id="reset" class="btn reset">🗑️ تصفير النقاط</button>
+  </div>
+
+  <div id="last" class="last">جاهز لبدء التحدي 🔥</div>
 </div>
+
 <script>
-const countries=[
- {id:'ma',name:'MOROCCO',flag:'🇲🇦',accent:'#e8405d'},
- {id:'dz',name:'ALGERIA',flag:'🇩🇿',accent:'#44c97d'},
- {id:'eg',name:'EGYPT',flag:'🇪🇬',accent:'#f0cc4d'},
- {id:'sa',name:'SAUDI',flag:'🇸🇦',accent:'#36c781'}
+const baseCountries = [
+  ["المغرب","ma"],
+  ["الجزائر","dz"],
+  ["تونس","tn"],
+  ["السعودية","sa"],
+  ["العراق","iq"],
+  ["مصر","eg"],
+  ["فلسطين","ps"],
+  ["الأردن","jo"],
+  ["الإمارات","ae"],
+  ["قطر","qa"]
 ];
-const giftTypes=[{icon:'🌹',name:'Rose',meters:2},{icon:'🎁',name:'Gift',meters:5},{icon:'🚀',name:'Rocket',meters:12},{icon:'👑',name:'Crown',meters:25}];
-let round=1,totalGifts=0,finished=false,selected='ma';
-let racers={};
-const finishMeters=100;
-const track=document.getElementById('track');
-const btnWrap=document.getElementById('countryBtns');
 
-function build(){
- track.querySelectorAll('.lane').forEach(x=>x.remove()); btnWrap.innerHTML=''; racers={};
- countries.forEach((c,i)=>{
-   const lane=document.createElement('div'); lane.className='lane'; lane.dataset.id=c.id;
-   lane.innerHTML=`<div class="lane-info"><span class="flag">${c.flag}</span><div><div class="country">${c.name}</div><div class="score"><span class="meters">0</span> / ${finishMeters}m</div></div></div><div class="rank">#${i+1}</div><div class="racer"><span class="boostfx">💨💨</span><span class="horse">🏇</span></div>`;
-   track.appendChild(lane);
-   racers[c.id]={...c,meters:0,visual:0,lane,racer:lane.querySelector('.racer'),meterEl:lane.querySelector('.meters'),rankEl:lane.querySelector('.rank')};
-   const b=document.createElement('button');b.className='gift-btn';b.dataset.id=c.id;b.innerHTML=`<span class="em">${c.flag}</span><b>${c.name}</b><small>SELECT</small>`;b.onclick=()=>{selected=c.id;refreshSelection()};btnWrap.appendChild(b);
- });
- refreshSelection(); updateRanks();
+let saved = JSON.parse(localStorage.getItem("arabBattle10") || "{}");
+let countries = baseCountries.map(([name,code])=>({
+  name,code,score:Number(saved[name]||0)
+}));
+let history=[];
+
+const grid=document.getElementById("grid");
+const ranking=document.getElementById("ranking");
+const last=document.getElementById("last");
+
+function flag(code){
+  return `https://flagcdn.com/w160/${code}.png`;
 }
-function refreshSelection(){[...btnWrap.children].forEach(b=>{const active=b.dataset.id===selected;b.style.outline=active?'2px solid white':'none';b.querySelector('small').textContent=active?'SELECTED':'SELECT';});}
-function addGift(id,gift){if(finished)return;const r=racers[id];r.meters=Math.min(finishMeters,r.meters+gift.meters);totalGifts++;document.getElementById('gifts').textContent=totalGifts;r.racer.classList.add('boost');clearTimeout(r.boostTimer);r.boostTimer=setTimeout(()=>r.racer.classList.remove('boost'),700);spawnGift(r,gift);updateRanks();if(r.meters>=finishMeters){setTimeout(()=>win(r),350)}}
-function spawnGift(r,g){const pop=document.createElement('div');pop.className='gift-pop';pop.textContent=`${g.icon} +${g.meters}m`;pop.style.left=`${Math.min(80,12+r.visual*.68)}%`;pop.style.top=(r.lane.offsetTop+55)+'px';track.appendChild(pop);setTimeout(()=>pop.remove(),1000)}
-function updateRanks(){const arr=Object.values(racers).sort((a,b)=>b.meters-a.meters);arr.forEach((r,i)=>{r.rankEl.textContent='#'+(i+1)});document.getElementById('leader').textContent=arr[0].meters?arr[0].flag:'—'}
-function animate(){const maxPx=track.clientWidth-102;Object.values(racers).forEach(r=>{r.visual+=(r.meters-r.visual)*.09;const px=(r.visual/finishMeters)*maxPx;r.racer.style.transform=`translateX(${px}px)`;r.meterEl.textContent=Math.round(r.visual)});requestAnimationFrame(animate)}
-function win(r){if(finished)return;finished=true;document.getElementById('winFlag').textContent=r.flag;document.getElementById('winTitle').textContent=r.name+' WINS!';document.getElementById('winSub').textContent=`Country ${r.flag} reached ${finishMeters}m first • ${totalGifts} gifts this round`;celebrate();document.getElementById('overlay').classList.add('show')}
-function celebrate(){const box=document.getElementById('confetti');box.innerHTML='';const bits=['🎉','✨','⭐','🔥','🎊'];for(let i=0;i<45;i++){const p=document.createElement('span');p.className='piece';p.textContent=bits[Math.floor(Math.random()*bits.length)];p.style.left=Math.random()*100+'%';p.style.animationDelay=(Math.random()*.9)+'s';p.style.animationDuration=(2+Math.random()*2)+'s';box.appendChild(p)}}
-function reset(next=false){if(next)round++;totalGifts=0;finished=false;document.getElementById('round').textContent=round;document.getElementById('gifts').textContent=0;document.getElementById('leader').textContent='—';document.getElementById('overlay').classList.remove('show');Object.values(racers).forEach(r=>{r.meters=0;r.visual=0;r.racer.style.transform='translateX(0)';r.meterEl.textContent='0';r.racer.classList.remove('boost')});updateRanks()}
+function sorted(){
+  return [...countries].sort((a,b)=>b.score-a.score || a.name.localeCompare(b.name,"ar"));
+}
+function save(){
+  const data={};
+  countries.forEach(c=>data[c.name]=c.score);
+  localStorage.setItem("arabBattle10",JSON.stringify(data));
+}
+function render(){
+  const list=sorted();
 
-document.getElementById('resetBtn').onclick=()=>reset(false);document.getElementById('nextBtn').onclick=()=>reset(true);document.getElementById('randomBtn').onclick=()=>{const c=countries[Math.floor(Math.random()*countries.length)],g=giftTypes[Math.floor(Math.random()*giftTypes.length)];selected=c.id;refreshSelection();addGift(c.id,g)};
-// Clicking the selected country cycles through gift strengths for quick demo.
-let giftCycle=0;btnWrap.addEventListener('dblclick',e=>e.preventDefault());
-btnWrap.addEventListener('contextmenu',e=>e.preventDefault());
-btnWrap.addEventListener('click',e=>{const b=e.target.closest('.gift-btn');if(!b)return;setTimeout(()=>addGift(b.dataset.id,giftTypes[giftCycle++%giftTypes.length]),80)});
-build();animate();
+  ranking.innerHTML=list.slice(0,5).map((c,i)=>`
+    <div class="rank-item ${i===0&&c.score>0?"first":""}">
+      <div class="rank-no">${i===0&&c.score>0?"👑":"#"+(i+1)}</div>
+      <img src="${flag(c.code)}" alt="${c.name}">
+      <div class="rank-name">${c.name}</div>
+      <div class="rank-score">${c.score}</div>
+    </div>
+  `).join("");
+
+  grid.innerHTML=list.map((c,i)=>`
+    <div class="country ${i<3&&c.score>0?"leading":""}" data-name="${c.name}">
+      <div class="rank-badge">${i===0&&c.score>0?"👑":"#"+(i+1)}</div>
+      <img class="flag" src="${flag(c.code)}" alt="${c.name}">
+      <div class="info">
+        <div class="name">${c.name}</div>
+        <div class="score">${c.score}</div>
+        <div class="pts">نقطة</div>
+      </div>
+      <div class="plus-btn">+1</div>
+    </div>
+  `).join("");
+
+  document.querySelectorAll(".country").forEach(card=>{
+    card.addEventListener("click",()=>addPoint(card.dataset.name));
+  });
+}
+function addPoint(name){
+  const c=countries.find(x=>x.name===name);
+  if(!c)return;
+  c.score++;
+  history.push(name);
+  save();
+  last.innerHTML=`🔥 نقطة جديدة لـ <b>${name}</b> — المجموع <b>${c.score}</b>`;
+  render();
+
+  const card=[...document.querySelectorAll(".country")].find(x=>x.dataset.name===name);
+  if(card){
+    const pop=document.createElement("div");
+    pop.className="pop";
+    pop.textContent="+1";
+    card.appendChild(pop);
+  }
+}
+document.getElementById("undo").addEventListener("click",()=>{
+  const name=history.pop();
+  if(!name){
+    last.textContent="لا توجد نقطة للتراجع عنها.";
+    return;
+  }
+  const c=countries.find(x=>x.name===name);
+  if(c&&c.score>0)c.score--;
+  save();
+  render();
+  last.innerHTML=`↩️ تم حذف نقطة من <b>${name}</b>`;
+});
+document.getElementById("reset").addEventListener("click",()=>{
+  if(!confirm("هل تريد تصفير جميع النقاط؟"))return;
+  countries.forEach(c=>c.score=0);
+  history=[];
+  save();
+  render();
+  last.textContent="تم تصفير جميع النقاط.";
+});
+render();
 </script>
 </body>
 </html>
