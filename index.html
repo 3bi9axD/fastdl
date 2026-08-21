@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
 <title>تحدي الدول العربية</title>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -284,6 +284,200 @@ body{
   .rank-item img{width:32px;height:23px}
   .rank-name{font-size:9px}
 }
+
+/* ===== TikTok Live Studio / phone 9:16 fit ===== */
+html,body{
+  width:100%;
+  height:100%;
+  min-height:0;
+  overflow:hidden;
+}
+body{
+  align-items:flex-start;
+}
+.app{
+  width:min(100vw, 56.25vh);
+  max-width:none;
+  height:100dvh;
+  min-height:0;
+  padding:clamp(5px,1vh,9px);
+  overflow:hidden;
+  display:flex;
+  flex-direction:column;
+  margin:0 auto;
+}
+.header{
+  flex:0 0 auto;
+  padding:clamp(7px,1vh,10px) 9px clamp(6px,.8vh,8px);
+  border-radius:14px;
+}
+.header h1{font-size:clamp(17px,2.7vh,22px)}
+.callout{
+  margin-top:clamp(3px,.55vh,6px);
+  padding:clamp(4px,.65vh,6px) 10px;
+  font-size:clamp(11px,1.8vh,14px);
+}
+.sub{
+  margin-top:clamp(3px,.5vh,5px);
+  font-size:clamp(8px,1.2vh,10px);
+}
+.live{
+  top:6px; left:7px;
+  padding:3px 6px;
+  font-size:8px;
+}
+.section-title{
+  flex:0 0 auto;
+  margin:clamp(4px,.65vh,7px) 2px clamp(3px,.45vh,5px);
+}
+.section-title b{font-size:clamp(10px,1.5vh,12px)}
+.section-title span{font-size:clamp(8px,1.1vh,9px)}
+.ranking{
+  flex:0 0 auto;
+  gap:4px;
+}
+.rank-item{
+  padding:clamp(3px,.5vh,5px) 2px;
+  border-radius:10px;
+}
+.rank-item img{
+  width:clamp(25px,4.4vh,34px);
+  height:clamp(18px,3.1vh,24px);
+}
+.rank-no{font-size:7px;margin-bottom:1px}
+.rank-name{font-size:clamp(7px,1.05vh,9px);margin-top:1px}
+.rank-score{font-size:clamp(11px,1.8vh,15px);margin-top:0}
+
+.grid{
+  flex:1 1 auto;
+  min-height:0;
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  grid-template-rows:repeat(5,minmax(0,1fr));
+  gap:clamp(3px,.55vh,5px);
+}
+.country{
+  min-height:0;
+  height:100%;
+  grid-template-columns:clamp(36px,6.4vh,48px) minmax(0,1fr) clamp(28px,4.8vh,36px);
+  gap:clamp(3px,.5vh,5px);
+  padding:clamp(3px,.55vh,6px);
+  border-radius:11px;
+}
+.flag{
+  width:clamp(36px,6.4vh,48px);
+  height:clamp(25px,4.4vh,33px);
+  border-radius:6px;
+}
+.name{font-size:clamp(9px,1.45vh,12px)}
+.score{font-size:clamp(14px,2.25vh,19px);margin-top:1px}
+.pts{font-size:7px;margin-top:0}
+.plus-btn{
+  width:clamp(27px,4.7vh,35px);
+  height:clamp(27px,4.7vh,35px);
+  border-radius:9px;
+  font-size:clamp(12px,1.9vh,15px);
+}
+.rank-badge{
+  top:2px;right:2px;
+  min-width:17px;height:14px;
+  font-size:7px;
+}
+.controls{
+  flex:0 0 auto;
+  margin-top:clamp(3px,.55vh,5px);
+  gap:5px;
+  grid-template-columns:1fr 1fr auto;
+}
+.btn{
+  padding:clamp(5px,.8vh,7px) 5px;
+  border-radius:9px;
+  font-size:clamp(8px,1.2vh,10px);
+}
+.music-toggle{
+  border:1px solid rgba(57,229,140,.22);
+  background:rgba(57,229,140,.10);
+  color:#8ff6bd;
+  min-width:43px;
+}
+.last{
+  flex:0 0 auto;
+  margin-top:clamp(3px,.45vh,4px);
+  padding:clamp(4px,.6vh,6px) 7px;
+  border-radius:8px;
+  min-height:0;
+  font-size:clamp(8px,1.15vh,9px);
+}
+@media (max-aspect-ratio: 9/16){
+  .app{width:100vw}
+}
+@media (max-height:700px){
+  .sub,.pts{display:none}
+  .header h1{font-size:16px}
+  .callout{font-size:11px}
+}
+
+
+/* ===== Point announcement ===== */
+.point-announcement{
+  position:fixed;
+  z-index:9999;
+  left:50%;
+  top:42%;
+  transform:translate(-50%,-50%) scale(.65);
+  min-width:min(82vw,330px);
+  padding:16px 20px 15px;
+  border-radius:24px;
+  border:2px solid rgba(255,216,77,.8);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,216,77,.24),transparent 50%),
+    rgba(7,10,18,.96);
+  box-shadow:0 18px 55px rgba(0,0,0,.6),0 0 30px rgba(255,216,77,.18);
+  text-align:center;
+  pointer-events:none;
+  opacity:0;
+  visibility:hidden;
+}
+.point-announcement.show{
+  visibility:visible;
+  animation:pointAnnouncement .95s cubic-bezier(.2,.9,.25,1) forwards;
+}
+.point-announcement img{
+  width:82px;
+  height:55px;
+  object-fit:cover;
+  border-radius:10px;
+  border:2px solid rgba(255,255,255,.22);
+  box-shadow:0 8px 20px rgba(0,0,0,.38);
+}
+.announce-plus{
+  margin-top:6px;
+  color:var(--green);
+  font-size:44px;
+  line-height:1;
+  font-weight:1000;
+  text-shadow:0 0 18px rgba(57,229,140,.55);
+}
+.announce-country{
+  margin-top:4px;
+  font-size:25px;
+  font-weight:1000;
+  color:#fff;
+}
+@keyframes pointAnnouncement{
+  0%{opacity:0;transform:translate(-50%,-50%) scale(.55)}
+  18%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}
+  32%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  76%{opacity:1;transform:translate(-50%,-56%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-70%) scale(.9)}
+}
+@media(max-width:390px){
+  .point-announcement{min-width:72vw;padding:12px 15px;border-radius:19px}
+  .point-announcement img{width:66px;height:44px}
+  .announce-plus{font-size:35px}
+  .announce-country{font-size:20px}
+}
+
 </style>
 </head>
 <body>
@@ -292,7 +486,7 @@ body{
   <header class="header">
     <div class="live"><span class="dot"></span>LIVE</div>
     <h1>🌍 تحدي <span>الدول العربية</span></h1>
-    <div class="callout">✍️ اكتب دولتك + نقطة</div>
+    <div class="callout">✍️ اكتب دولتك = +1 نقطة</div>
     <div class="sub">كل نقطة ترفع دولتك في الترتيب 🔥</div>
   </header>
 
@@ -311,9 +505,17 @@ body{
   <div class="controls">
     <button id="undo" class="btn undo">↩️ تراجع عن آخر نقطة</button>
     <button id="reset" class="btn reset">🗑️ تصفير النقاط</button>
+    <button id="musicToggle" class="btn music-toggle" title="الموسيقى">🎵</button>
   </div>
 
   <div id="last" class="last">جاهز لبدء التحدي 🔥</div>
+</div>
+
+
+<div id="pointAnnouncement" class="point-announcement" aria-live="polite">
+  <img id="announceFlag" alt="">
+  <div class="announce-plus">+1</div>
+  <div id="announceCountry" class="announce-country"></div>
 </div>
 
 <script>
@@ -380,11 +582,70 @@ function render(){
     card.addEventListener("click",()=>addPoint(card.dataset.name));
   });
 }
+
+let announceTimer=null;
+
+function playPointSound(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
+    if(!musicCtx){
+      musicCtx=new AC();
+      musicMaster=musicCtx.createGain();
+      musicMaster.gain.value=0.45;
+      musicMaster.connect(musicCtx.destination);
+    }
+    if(musicCtx.state==="suspended") musicCtx.resume();
+
+    const now=musicCtx.currentTime;
+    const out=musicCtx.createGain();
+    out.gain.setValueAtTime(0.0001,now);
+    out.gain.exponentialRampToValueAtTime(0.24,now+.012);
+    out.gain.exponentialRampToValueAtTime(0.0001,now+.30);
+    out.connect(musicCtx.destination);
+
+    const notes=[659.25,783.99,1046.5];
+    notes.forEach((freq,i)=>{
+      const osc=musicCtx.createOscillator();
+      const g=musicCtx.createGain();
+      osc.type="sine";
+      osc.frequency.setValueAtTime(freq,now+i*.055);
+      g.gain.setValueAtTime(.0001,now+i*.055);
+      g.gain.exponentialRampToValueAtTime(.7,now+i*.055+.008);
+      g.gain.exponentialRampToValueAtTime(.0001,now+i*.055+.12);
+      osc.connect(g);
+      g.connect(out);
+      osc.start(now+i*.055);
+      osc.stop(now+i*.055+.14);
+    });
+  }catch(e){}
+}
+
+function showPointAnnouncement(country){
+  const box=document.getElementById("pointAnnouncement");
+  const name=document.getElementById("announceCountry");
+  const img=document.getElementById("announceFlag");
+  if(!box||!name||!img)return;
+
+  img.src=flag(country.code);
+  img.alt=country.name;
+  name.textContent=country.name;
+
+  box.classList.remove("show");
+  void box.offsetWidth;
+  box.classList.add("show");
+
+  clearTimeout(announceTimer);
+  announceTimer=setTimeout(()=>box.classList.remove("show"),1000);
+}
+
 function addPoint(name){
   const c=countries.find(x=>x.name===name);
   if(!c)return;
   c.score++;
   history.push(name);
+  playPointSound();
+  showPointAnnouncement(c);
   save();
   last.innerHTML=`🔥 نقطة جديدة لـ <b>${name}</b> — المجموع <b>${c.score}</b>`;
   render();
@@ -418,6 +679,77 @@ document.getElementById("reset").addEventListener("click",()=>{
   last.textContent="تم تصفير جميع النقاط.";
 });
 render();
+
+// ===== Self-contained looping background music =====
+// Browsers block autoplay until the first click/tap. The first interaction starts it.
+let musicCtx=null, musicMaster=null, musicTimer=null, musicPlaying=false, nextBeatTime=0, beatIndex=0;
+
+function makeTone(freq, start, duration, volume, type="sine"){
+  if(!musicCtx || !musicMaster) return;
+  const osc=musicCtx.createOscillator();
+  const gain=musicCtx.createGain();
+  osc.type=type;
+  osc.frequency.setValueAtTime(freq,start);
+  gain.gain.setValueAtTime(0.0001,start);
+  gain.gain.exponentialRampToValueAtTime(volume,start+0.01);
+  gain.gain.exponentialRampToValueAtTime(0.0001,start+duration);
+  osc.connect(gain);
+  gain.connect(musicMaster);
+  osc.start(start);
+  osc.stop(start+duration+0.02);
+}
+
+function scheduleMusic(){
+  if(!musicPlaying || !musicCtx) return;
+  const step=0.25; // 120 BPM eighth-note pulse
+  const melody=[392,440,523.25,440,349.23,392,440,329.63];
+  while(nextBeatTime < musicCtx.currentTime + 0.20){
+    const i=beatIndex % melody.length;
+    makeTone(melody[i], nextBeatTime, 0.18, 0.045, "triangle");
+    if(beatIndex % 2===0) makeTone(130.81, nextBeatTime, 0.20, 0.035, "sine");
+    if(beatIndex % 4===0) makeTone(65.41, nextBeatTime, 0.12, 0.05, "square");
+    beatIndex++;
+    nextBeatTime += step;
+  }
+}
+
+async function startMusic(){
+  if(musicPlaying) return;
+  const AC=window.AudioContext||window.webkitAudioContext;
+  if(!AC) return;
+  if(!musicCtx){
+    musicCtx=new AC();
+    musicMaster=musicCtx.createGain();
+    musicMaster.gain.value=0.45;
+    musicMaster.connect(musicCtx.destination);
+  }
+  if(musicCtx.state==="suspended") await musicCtx.resume();
+  musicPlaying=true;
+  beatIndex=0;
+  nextBeatTime=musicCtx.currentTime+0.05;
+  scheduleMusic();
+  musicTimer=setInterval(scheduleMusic,100);
+  const b=document.getElementById("musicToggle");
+  if(b) b.textContent="🔊";
+}
+
+function stopMusic(){
+  musicPlaying=false;
+  if(musicTimer){clearInterval(musicTimer);musicTimer=null;}
+  const b=document.getElementById("musicToggle");
+  if(b) b.textContent="🔇";
+}
+
+document.getElementById("musicToggle").addEventListener("click", async (e)=>{
+  e.stopPropagation();
+  if(musicPlaying) stopMusic(); else await startMusic();
+});
+
+// Try on the first user interaction anywhere, which satisfies mobile autoplay rules.
+document.addEventListener("pointerdown", ()=>{
+  if(!musicPlaying) startMusic();
+},{once:true});
+
 </script>
 </body>
 </html>
