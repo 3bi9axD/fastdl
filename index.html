@@ -478,10 +478,127 @@ body{
   .announce-country{font-size:20px}
 }
 
+
+/* ===== TikTok engagement effects ===== */
+.app{position:relative}
+.ambient{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  overflow:hidden;
+  z-index:0;
+}
+.ambient span{
+  position:absolute;
+  opacity:.12;
+  font-size:18px;
+  animation:ambientFloat 7s linear infinite;
+}
+.ambient span:nth-child(1){left:8%;top:82%;animation-delay:0s}
+.ambient span:nth-child(2){left:24%;top:94%;animation-delay:1.4s}
+.ambient span:nth-child(3){left:70%;top:88%;animation-delay:2.8s}
+.ambient span:nth-child(4){left:87%;top:96%;animation-delay:4.2s}
+.ambient span:nth-child(5){left:52%;top:91%;animation-delay:5.2s}
+@keyframes ambientFloat{
+  0%{transform:translateY(0) scale(.8) rotate(0deg);opacity:0}
+  15%{opacity:.13}
+  85%{opacity:.13}
+  100%{transform:translateY(-760px) scale(1.35) rotate(40deg);opacity:0}
+}
+.header,.leader-banner,.section-title,.ranking,.grid,.controls,.last{position:relative;z-index:1}
+
+.leader-banner{
+  flex:0 0 auto;
+  margin-top:clamp(4px,.6vh,6px);
+  padding:clamp(5px,.75vh,7px) 8px;
+  border-radius:13px;
+  border:1px solid rgba(255,216,77,.30);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,216,77,.18),transparent 65%),
+    linear-gradient(135deg,#111827,#0b111c);
+  box-shadow:inset 0 0 18px rgba(255,216,77,.04);
+  text-align:center;
+  overflow:hidden;
+}
+.leader-banner::after{
+  content:"";
+  position:absolute;
+  top:0;left:-50%;
+  width:35%;
+  height:100%;
+  background:linear-gradient(90deg,transparent,rgba(255,255,255,.13),transparent);
+  transform:skewX(-22deg);
+  animation:leaderShine 3s infinite;
+}
+@keyframes leaderShine{
+  0%,55%{left:-50%}
+  100%{left:130%}
+}
+.leader-label{
+  color:#d8b934;
+  font-size:clamp(8px,1.15vh,10px);
+  font-weight:900;
+}
+.leader-main{
+  margin-top:2px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+}
+.leader-main img{
+  width:clamp(30px,4.8vh,39px);
+  height:clamp(21px,3.3vh,27px);
+  object-fit:cover;
+  border-radius:5px;
+  border:1px solid rgba(255,255,255,.18);
+}
+.leader-main strong{
+  font-size:clamp(13px,1.95vh,17px);
+  color:#fff;
+}
+.leader-main span{
+  min-width:34px;
+  padding:2px 8px;
+  border-radius:999px;
+  background:linear-gradient(135deg,#ffd84d,#ff9d2d);
+  color:#171717;
+  font-weight:1000;
+  font-size:clamp(12px,1.8vh,15px);
+}
+.leader-banner.takeover{
+  animation:leaderTakeover .9s ease;
+}
+@keyframes leaderTakeover{
+  0%{transform:scale(.95);filter:brightness(1)}
+  35%{transform:scale(1.03);filter:brightness(1.6)}
+  100%{transform:scale(1);filter:brightness(1)}
+}
+.country.leading::after{
+  content:"🔥";
+  position:absolute;
+  left:4px;
+  top:2px;
+  font-size:12px;
+  animation:flamePulse .8s ease-in-out infinite alternate;
+}
+@keyframes flamePulse{
+  from{transform:translateY(1px) scale(.9);opacity:.65}
+  to{transform:translateY(-1px) scale(1.15);opacity:1}
+}
+@media (prefers-reduced-motion: reduce){
+  .ambient span,.leader-banner::after,.country.leading::after{animation:none}
+}
+
 </style>
 </head>
 <body>
 <div class="app">
+
+  <div class="ambient" aria-hidden="true">
+    <span>🔥</span><span>✨</span><span>🔥</span><span>⚡</span><span>✨</span>
+  </div>
+
 
   <header class="header">
     <div class="live"><span class="dot"></span>LIVE</div>
@@ -489,6 +606,16 @@ body{
     <div class="callout">✍️ اكتب دولتك = +1 نقطة</div>
     <div class="sub">كل نقطة ترفع دولتك في الترتيب 🔥</div>
   </header>
+
+  <div id="leaderBanner" class="leader-banner">
+    <div class="leader-label">👑 المتصدر الآن</div>
+    <div class="leader-main">
+      <img id="leaderFlag" alt="">
+      <strong id="leaderName">—</strong>
+      <span id="leaderScore">0</span>
+    </div>
+  </div>
+
 
   <div class="section-title">
     <b>🏆 الترتيب المباشر</b>
@@ -553,8 +680,64 @@ function save(){
   countries.forEach(c=>data[c.name]=c.score);
   localStorage.setItem("arabBattle10",JSON.stringify(data));
 }
+
+let currentLeaderName = null;
+
+function playLeaderSound(){
+  try{
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if(!AC)return;
+    if(!musicCtx){
+      musicCtx=new AC();
+      musicMaster=musicCtx.createGain();
+      musicMaster.gain.value=0.45;
+      musicMaster.connect(musicCtx.destination);
+    }
+    if(musicCtx.state==="suspended") musicCtx.resume();
+    const now=musicCtx.currentTime;
+    const notes=[523.25,659.25,783.99,1046.5];
+    notes.forEach((freq,i)=>{
+      const osc=musicCtx.createOscillator();
+      const gain=musicCtx.createGain();
+      osc.type=i===3?"triangle":"sine";
+      osc.frequency.setValueAtTime(freq,now+i*.085);
+      gain.gain.setValueAtTime(.0001,now+i*.085);
+      gain.gain.exponentialRampToValueAtTime(.10,now+i*.085+.01);
+      gain.gain.exponentialRampToValueAtTime(.0001,now+i*.085+.22);
+      osc.connect(gain);
+      gain.connect(musicCtx.destination);
+      osc.start(now+i*.085);
+      osc.stop(now+i*.085+.25);
+    });
+  }catch(e){}
+}
+
+function updateLeaderBanner(list){
+  if(!list || !list.length) return;
+  const leader=list[0];
+  const flagEl=document.getElementById("leaderFlag");
+  const nameEl=document.getElementById("leaderName");
+  const scoreEl=document.getElementById("leaderScore");
+  const banner=document.getElementById("leaderBanner");
+  if(!flagEl||!nameEl||!scoreEl||!banner)return;
+
+  flagEl.src=flag(leader.code);
+  flagEl.alt=leader.name;
+  nameEl.textContent=leader.name;
+  scoreEl.textContent=leader.score;
+
+  if(leader.score>0 && currentLeaderName && currentLeaderName!==leader.name){
+    banner.classList.remove("takeover");
+    void banner.offsetWidth;
+    banner.classList.add("takeover");
+    playLeaderSound();
+  }
+  currentLeaderName=leader.name;
+}
+
 function render(){
   const list=sorted();
+  updateLeaderBanner(list);
 
   ranking.innerHTML=list.slice(0,5).map((c,i)=>`
     <div class="rank-item ${i===0&&c.score>0?"first":""}">
