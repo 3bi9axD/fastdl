@@ -1,35 +1,16 @@
-# Kenitra Honey Shop
+# Country Rush LIVE — TikTok Race Demo
 
-## What it includes
-- Arabic RTL storefront
-- Products loaded live from Firebase Realtime Database
-- Articles/blog
-- WhatsApp order button with product name, price, weight
-- Admin page with Firebase Authentication
-- Product/article image uploads to Firebase Storage
-- Edit/delete products and articles
-- Editable shop name, WhatsApp number, hero text
-- Responsive mobile/desktop layout
+A vertical 9:16 interactive country horse race prepared for TikTok LIVE Studio.
 
-## Firebase setup (required once)
-1. Firebase Console > Authentication > Sign-in method > enable Email/Password.
-2. Authentication > Users > Add user. This email/password is your admin login.
-3. Realtime Database > Rules: paste `database.rules.json`.
-4. Storage > Rules: paste `storage.rules`.
-5. Open `/admin.html`, login, set your WhatsApp number in Settings.
-6. Optional: click "إضافة محتوى تجريبي" once.
+## Demo controls
+- Click a country to select it and trigger demo boosts.
+- Repeated clicks cycle through Rose (+2m), Gift (+5m), Rocket (+12m), Crown (+25m).
+- Random Gift picks a random country and gift.
+- First country to 100m wins.
+- Next Race starts a fresh round.
 
-## WhatsApp number
-Use international format without `+`, for example Morocco: `2126XXXXXXXX`.
+## Deploy on Vercel
+This is a static site. Upload this folder to a GitHub repo and import it into Vercel, or run `vercel` in the folder.
 
-## Deploy
-Upload the folder to your GitHub repo connected to Vercel, or deploy as a static Vercel project.
-
-
-## Admin login
-Open `/admin.html`.
-
-- Username: `3bi9a`
-- Password: `3bi9a`
-
-This prototype uses a browser-side admin login. Apply the included Realtime Database and Storage rules for admin edits/uploads to work. For a public production store, replace this with Firebase Authentication because browser-side credentials can be discovered by a technical user.
+## Next integration step
+Replace the demo click handler with incoming TikTok LIVE gift events from a small event listener/backend. Map each gift/viewer/team to `addGift(countryId, giftType)`.
